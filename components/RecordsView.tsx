@@ -28,7 +28,7 @@ const RecordsView: React.FC<RecordsViewProps> = ({ onTransferSuccess }) => {
   const startTransfer = () => setTransferStep(1);
   const confirmTransfer = async () => {
     setIsTransferring(true);
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    await new Promise(resolve => setTimeout(resolve, 2000));
     setIsTransferring(false);
     setTransferStep(2);
   };
@@ -96,8 +96,12 @@ const RecordsView: React.FC<RecordsViewProps> = ({ onTransferSuccess }) => {
              )}
 
              {isAnalyzing && (
-               <div className="flex items-center justify-center py-4 text-stone-500 space-x-2">
-                 <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-[#bef264]"></div>
+               <div className="flex flex-col items-center justify-center py-4 text-stone-500 space-y-3">
+                 <div className="graphic-loader w-12 h-12">
+                     <div className="graphic-loader-content">
+                        <Sparkles size={16} className="text-[#bef264]" />
+                     </div>
+                 </div>
                  <span className="text-sm font-medium">正在为您分析病历...</span>
                </div>
              )}
@@ -180,7 +184,12 @@ const RecordsView: React.FC<RecordsViewProps> = ({ onTransferSuccess }) => {
                  disabled={isTransferring}
                  className="flex-1 py-3.5 bg-stone-900 text-white font-bold rounded-xl text-sm flex justify-center items-center shadow-lg"
                >
-                 {isTransferring ? '办理中...' : '确认转入'}
+                 {isTransferring ? (
+                    <div className="graphic-loader w-6 h-6 mr-2">
+                       <div className="graphic-loader-content"></div>
+                    </div>
+                 ) : '确认转入'}
+                 {isTransferring && <span>办理中...</span>}
                </button>
              </div>
           </div>

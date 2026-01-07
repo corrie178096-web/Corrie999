@@ -148,14 +148,14 @@ const Layout: React.FC<LayoutProps> = ({ children, activeTab, onTabChange, role,
   };
 
   return (
-    <div className={`flex flex-col h-screen font-sans ${role === 'PATIENT' || role === 'FAMILY' ? 'bg-[#F2F5E8]' : 'bg-gray-50'}`}>
+    <div className={`flex flex-col h-full font-sans ${role === 'PATIENT' || role === 'FAMILY' ? 'bg-[#F2F5E8]' : 'bg-gray-50'}`}>
       {/* Main Content Area */}
-      <main className="flex-1 overflow-y-auto pb-28 no-scrollbar">
+      <main className="flex-1 overflow-y-auto pb-28 no-scrollbar pt-8 md:pt-12">
         {children}
       </main>
 
       {/* Bottom Navigation */}
-      <nav className={`fixed bottom-6 left-4 right-4 ${theme.bg} rounded-[2.5rem] shadow-2xl ${theme.shadow} z-50 transition-colors duration-500`}>
+      <nav className={`absolute bottom-6 left-4 right-4 ${theme.bg} rounded-[2.5rem] shadow-2xl ${theme.shadow} z-50 transition-colors duration-500`}>
         
         {/* Central Floating Button for Patient */}
         {role === 'PATIENT' && (

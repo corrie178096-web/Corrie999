@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="zh-CN">
   <head>
@@ -19,6 +20,62 @@
       .no-scrollbar {
         -ms-overflow-style: none;
         scrollbar-width: none;
+      }
+
+      /* --- New Clean Graphic Loader Styles --- */
+      @keyframes loader-spin-slow {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+      @keyframes loader-spin-fast {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+      @keyframes loader-jump {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(0.85); }
+      }
+      
+      .graphic-loader {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        /* Default size can be overridden by Tailwind classes */
+      }
+      
+      /* 1. The Outer Pattern Ring (Dotted/Textured) - "The Green Pattern" */
+      .graphic-loader::before {
+        content: '';
+        position: absolute;
+        inset: -15%; /* Slightly larger than container */
+        border-radius: 50%;
+        border: 3px dotted #bef264; /* Lime Green Pattern */
+        opacity: 0.6;
+        animation: loader-spin-slow 10s linear infinite;
+      }
+      
+      /* 2. The Inner Active Ring (Dynamic) */
+      .graphic-loader::after {
+        content: '';
+        position: absolute;
+        inset: -5%;
+        border-radius: 50%;
+        border: 3px solid transparent;
+        border-top-color: #bef264;
+        border-left-color: #bef264;
+        animation: loader-spin-fast 1.5s cubic-bezier(0.5, 0.1, 0.4, 0.9) infinite;
+      }
+
+      /* 3. The Inner Content (Icon) - Jumping Effect */
+      .graphic-loader-content {
+        z-index: 10;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        animation: loader-jump 1.2s ease-in-out infinite;
       }
     </style>
   <script type="importmap">

@@ -113,10 +113,11 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="relative h-screen overflow-hidden">
-      {/* Demo Controller Overlay */}
-      <div className={`fixed top-4 left-1/2 -translate-x-1/2 z-[200] transition-all duration-500 ${showDemoMenu ? 'translate-y-0' : '-translate-y-24'}`}>
-        <div className="bg-stone-900/80 backdrop-blur-xl border border-white/20 px-2 py-2 rounded-full shadow-2xl flex items-center space-x-1">
+    <div className="flex items-center justify-center min-h-screen bg-stone-200 font-sans text-stone-900 selection:bg-lime-200 py-8">
+      
+      {/* Demo Controller Overlay - Fixed relative to Window */}
+      <div className={`fixed top-4 left-1/2 -translate-x-1/2 z-[10000] transition-all duration-500 ${showDemoMenu ? 'translate-y-0' : '-translate-y-32'}`}>
+        <div className="bg-stone-900/90 backdrop-blur-xl border border-white/10 px-2 py-2 rounded-full shadow-2xl flex items-center space-x-1">
           <div className="px-3 py-1 text-white/40"><Layers size={16} /></div>
           {[
             { id: 1, label: '登录' },
@@ -129,7 +130,7 @@ const App: React.FC = () => {
             <button 
               key={s.id}
               onClick={() => goToScene(s.id)}
-              className="px-4 py-1.5 rounded-full text-[11px] font-bold transition-all text-white/70 hover:bg-white/10 active:scale-90"
+              className="px-4 py-1.5 rounded-full text-[11px] font-bold transition-all text-white/70 hover:bg-white/10 active:scale-90 whitespace-nowrap"
             >
               {s.label}
             </button>
@@ -146,20 +147,35 @@ const App: React.FC = () => {
       {!showDemoMenu && (
         <button 
           onClick={() => setShowDemoMenu(true)}
-          className="fixed top-4 right-4 z-[200] w-10 h-10 bg-stone-900 text-[#bef264] rounded-full shadow-lg flex items-center justify-center animate-bounce"
+          className="fixed top-6 right-6 z-[10000] w-12 h-12 bg-stone-900 text-[#bef264] rounded-full shadow-lg flex items-center justify-center hover:scale-110 transition-transform"
         >
-          <Play size={16} />
+          <Play size={20} />
         </button>
       )}
 
-      <Layout 
-        activeTab={activeTab} 
-        onTabChange={setActiveTab} 
-        role={authState.role} 
-        doctorType={authState.doctorType}
-      >
-        {renderContent()}
-      </Layout>
+      {/* iPhone 16 Frame Container */}
+      <div className="relative w-full h-full md:w-[393px] md:h-[852px] bg-black md:rounded-[60px] md:border-[12px] md:border-[#1c1917] shadow-[0_0_80px_rgba(0,0,0,0.25)] overflow-hidden transform-gpu ring-1 ring-white/20 shrink-0">
+         
+         {/* Dynamic Island */}
+         <div className="hidden md:flex absolute top-3 left-1/2 -translate-x-1/2 w-[126px] h-[36px] bg-black rounded-full z-[9999] items-center justify-end pr-3 pointer-events-none">
+            <div className="w-2 h-2 rounded-full bg-[#1a1a1a]/80"></div>
+         </div>
+
+         {/* Screen Content */}
+         <div className="w-full h-full bg-[#F2F5E8] relative overflow-hidden md:rounded-[48px]">
+            <Layout 
+              activeTab={activeTab} 
+              onTabChange={setActiveTab} 
+              role={authState.role} 
+              doctorType={authState.doctorType}
+            >
+              {renderContent()}
+            </Layout>
+            
+            {/* Home Indicator */}
+            <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-[130px] h-[5px] bg-black/20 rounded-full z-[9999] pointer-events-none backdrop-blur-md"></div>
+         </div>
+      </div>
     </div>
   );
 };

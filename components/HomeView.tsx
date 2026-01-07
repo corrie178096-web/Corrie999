@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Bell, Activity, Syringe, Check, MapPin, QrCode, X, Sun, Thermometer, Bot, ChevronDown, CalendarPlus, UserPlus, ArrowRight, FileText, CheckCircle, CreditCard, Loader2, ScanFace, Shield, CloudCog, TrendingUp, TrendingDown, Minus, BookOpen, Pill, MessageSquare, Headphones } from 'lucide-react';
+import { Bell, Activity, Syringe, Check, MapPin, QrCode, X, Sun, Thermometer, Bot, ChevronDown, CalendarPlus, UserPlus, ArrowRight, FileText, CheckCircle, CreditCard, Loader2, ScanFace, Shield, CloudCog, TrendingUp, TrendingDown, Minus, BookOpen, Pill, MessageSquare, Headphones, RefreshCw } from 'lucide-react';
 import { MOCK_REMINDERS, MOCK_USER, MOCK_HOSPITALS, MOCK_RECORDS, MOCK_VITALS, MOCK_ARTICLES } from '../constants';
 import { Tab, JourneyStep } from '../types';
 
@@ -125,7 +125,7 @@ const HomeView: React.FC<HomeViewProps> = ({ onChangeTab, journeyStep, setJourne
 
   const handlePayment = () => {
     setJourneyStep('ANALYZING');
-    setTimeout(() => setJourneyStep('REPORT_READY'), 2000);
+    setTimeout(() => setJourneyStep('REPORT_READY'), 3000); // Wait longer for animation
   };
 
   const handleAcceptPlan = () => {
@@ -151,21 +151,35 @@ const HomeView: React.FC<HomeViewProps> = ({ onChangeTab, journeyStep, setJourne
            {bindStep === 1 && (
               <div className="h-full flex flex-col items-center justify-center p-8 animate-in slide-in-from-right">
                  <h2 className="text-2xl font-black text-stone-900 mb-2 text-center">身份核验</h2>
-                 <div className="relative w-64 h-64 my-12">
-                    <div className="absolute inset-0 border-4 border-stone-200 rounded-full"></div>
-                    <div className="absolute inset-0 border-4 border-[#bef264] rounded-full border-t-transparent animate-spin"></div>
-                    <div className="absolute inset-4 rounded-full overflow-hidden bg-stone-100 flex items-center justify-center">
+                 <div className="relative w-64 h-64 my-12 flex items-center justify-center">
+                    {/* Face Scan Animation Overlay */}
+                    <div className="absolute inset-0 border-4 border-stone-200/50 rounded-full"></div>
+                    <div className="absolute inset-0 rounded-full overflow-hidden flex items-center justify-center bg-stone-100">
                        <ScanFace size={100} className="text-stone-300" />
                     </div>
+                    {/* The Graphic Loader Ring Overlaying */}
+                    <div className="absolute inset-[-10px] pointer-events-none">
+                       <div className="graphic-loader w-full h-full !bg-transparent !p-0">
+                          {/* We override internal styles slightly for this large scanner */}
+                          <style>{`.graphic-loader::after { background: transparent; } .graphic-loader-content { background: transparent; box-shadow: none; }`}</style>
+                       </div>
+                    </div>
                  </div>
-                 <button onClick={() => setBindStep(2)} className="w-full max-w-xs py-4 bg-[#bef264] text-stone-900 font-bold rounded-[2rem] text-lg shadow-lg">开始人脸识别</button>
+                 <button onClick={() => setBindStep(2)} className="w-full max-w-xs py-4 bg-[#bef264] text-stone-900 font-bold rounded-[2rem] text-lg shadow-lg z-10">开始人脸识别</button>
               </div>
            )}
            {bindStep === 2 && (
-              <div className="h-full flex flex-col items-center justify-center p-8 text-center space-y-4">
-                 <Loader2 size={48} className="text-[#bef264] animate-spin mb-4" />
-                 <h2 className="text-xl font-bold text-stone-900">正在同步健康云数据...</h2>
-                 <button onClick={() => setJourneyStep('HOME_DEFAULT')} className="text-stone-400 text-xs mt-8">跳过演示</button>
+              <div className="h-full flex flex-col items-center justify-center p-8 text-center space-y-12">
+                 <div className="graphic-loader w-24 h-24">
+                    <div className="graphic-loader-content">
+                       <RefreshCw size={32} className="text-[#bef264] animate-spin" />
+                    </div>
+                 </div>
+                 <div>
+                    <h2 className="text-xl font-bold text-stone-900">正在同步健康云数据...</h2>
+                    <p className="text-sm text-stone-400 mt-2">获取历史就诊记录与处方信息</p>
+                 </div>
+                 <button onClick={() => setJourneyStep('HOME_DEFAULT')} className="text-stone-400 text-xs font-bold border-b border-stone-300 pb-0.5">跳过演示</button>
               </div>
            )}
         </div>
@@ -241,10 +255,14 @@ const HomeView: React.FC<HomeViewProps> = ({ onChangeTab, journeyStep, setJourne
          )}
 
          {journeyStep === 'ANALYZING' && (
-            <div className="bg-white rounded-[2rem] p-8 text-center shadow-sm border border-stone-100">
-                <Loader2 size={32} className="mx-auto text-[#bef264] animate-spin mb-4" />
-                <h3 className="font-bold text-lg text-stone-900">正在等待瑞金医院诊断反馈...</h3>
-                <p className="text-stone-500 text-sm mt-2">数据已上传至 3A 医院 AI 诊疗中心</p>
+            <div className="bg-white rounded-[2rem] p-10 text-center shadow-sm border border-stone-100 flex flex-col items-center">
+                <div className="graphic-loader w-20 h-20 mb-6">
+                   <div className="graphic-loader-content">
+                      <Bot size={32} className="text-[#bef264]" />
+                   </div>
+                </div>
+                <h3 className="font-bold text-lg text-stone-900">AI 正在分析诊断结果...</h3>
+                <p className="text-stone-500 text-sm mt-2">数据已加密传输至瑞金医院 AI 中心</p>
             </div>
          )}
 
