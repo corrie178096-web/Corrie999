@@ -1,0 +1,7 @@
+{
+  "name": "Copy of 医联通 (MediLink)",
+  "description": "Connecting Grade 3A hospitals with community clinics for seamless medical record transfer and appointment scheduling.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
