@@ -1,3 +1,4 @@
+
 import { GoogleGenAI } from "@google/genai";
 import { MedicalRecord, Hospital } from '../types';
 
@@ -25,8 +26,9 @@ export const analyzeMedicalRecord = async (record: MedicalRecord): Promise<strin
       治疗计划：${record.treatmentPlan}
     `;
 
+    // Using gemini-3-flash-preview as recommended for text processing tasks
     const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
+      model: 'gemini-3-flash-preview',
       contents: prompt,
     });
 
@@ -54,8 +56,9 @@ export const recommendHospital = async (record: MedicalRecord, hospitals: Hospit
         ${hospitalListStr}
       `;
 
+      // Using gemini-3-flash-preview as recommended for text processing tasks
       const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash',
+        model: 'gemini-3-flash-preview',
         contents: prompt,
       });
 

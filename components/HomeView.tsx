@@ -1,7 +1,7 @@
 
-import React, { useState, useEffect } from 'react';
-import { Bell, Activity, Syringe, Check, MapPin, QrCode, X, Sun, Thermometer, Bot, ChevronDown, CalendarPlus, UserPlus, ArrowRight, FileText, CheckCircle, CreditCard, Loader2, ScanFace, Shield, CloudCog, TrendingUp, TrendingDown, Minus, BookOpen, Pill, MessageSquare, Headphones, RefreshCw } from 'lucide-react';
-import { MOCK_REMINDERS, MOCK_USER, MOCK_HOSPITALS, MOCK_RECORDS, MOCK_VITALS, MOCK_ARTICLES } from '../constants';
+import React, { useState } from 'react';
+import { MapPin, Search, Pill, Activity, CalendarPlus, Share2, FileText, ArrowRight, Bot, Syringe, MessageSquare } from 'lucide-react';
+import { MOCK_USER, MOCK_ARTICLES } from '../constants';
 import { Tab, JourneyStep } from '../types';
 
 interface HomeViewProps {
@@ -10,309 +10,190 @@ interface HomeViewProps {
   setJourneyStep: (step: JourneyStep) => void;
 }
 
-const VitalsCard = () => (
-  <div className="bg-white rounded-[2rem] p-5 shadow-sm border border-stone-100 space-y-4">
-      <div className="flex justify-between items-center">
-         <h3 className="font-bold text-stone-900 flex items-center">
-            <Activity size={18} className="mr-2 text-stone-400" />
-            健康数据监测
-         </h3>
-         <button className="text-[10px] bg-stone-100 text-stone-500 px-2 py-1 rounded-lg font-bold">更新</button>
-      </div>
-      <div className="grid grid-cols-2 gap-4">
-         {MOCK_VITALS.map((vital, idx) => (
-            <div key={idx} className="bg-[#F2F5E8] rounded-2xl p-4 relative overflow-hidden">
-               <div className="flex justify-between items-start mb-2">
-                  <span className="text-xs text-stone-500 font-bold">{vital.type === 'SUGAR' ? '空腹血糖' : '血压'}</span>
-                  {vital.trend === 'STABLE' ? <Minus size={14} className="text-green-500"/> : 
-                   vital.trend === 'UP' ? <TrendingUp size={14} className="text-orange-500"/> : <TrendingDown size={14} className="text-blue-500"/>}
-               </div>
-               <div className="flex items-baseline space-x-1">
-                  <span className={`text-2xl font-black ${vital.status === 'HIGH' ? 'text-orange-500' : 'text-stone-900'}`}>{vital.value}</span>
-                  <span className="text-[10px] text-stone-400 font-bold">{vital.unit}</span>
-               </div>
-               <p className="text-[10px] text-stone-400 mt-2">{vital.lastMeasured}</p>
-            </div>
-         ))}
-      </div>
-  </div>
-);
-
-const QuickActions = () => (
-  <div className="flex space-x-4 overflow-x-auto no-scrollbar py-2">
-     {[
-       { icon: <Pill size={20} />, label: "我的用药", color: "text-blue-500", bg: "bg-blue-50" },
-       { icon: <FileText size={20} />, label: "检验报告", color: "text-purple-500", bg: "bg-purple-50" },
-       { icon: <MessageSquare size={20} />, label: "在线咨询", color: "text-green-500", bg: "bg-green-50" },
-       { icon: <Headphones size={20} />, label: "专属客服", color: "text-orange-500", bg: "bg-orange-50" },
-     ].map((action, i) => (
-       <button key={i} className="flex flex-col items-center space-y-2 min-w-[70px]">
-          <div className={`w-14 h-14 rounded-2xl flex items-center justify-center ${action.bg} ${action.color} shadow-sm active:scale-95 transition-transform`}>
-             {action.icon}
-          </div>
-          <span className="text-[10px] font-bold text-stone-600">{action.label}</span>
-       </button>
-     ))}
-  </div>
-);
-
-const HealthFeed = () => (
-  <div className="space-y-4">
-     <div className="flex justify-between items-center px-1">
-        <h3 className="font-bold text-lg text-stone-900">健康百科</h3>
-        <span className="text-xs text-stone-400 font-bold">为您推荐</span>
-     </div>
-     <div className="space-y-3">
-        {MOCK_ARTICLES.map(article => (
-           <div key={article.id} className="bg-white p-4 rounded-[1.5rem] shadow-sm flex justify-between items-center border border-stone-50 active:scale-[0.98] transition-transform">
-              <div>
-                 <span className="text-[10px] text-[#bef264] bg-stone-900 px-2 py-0.5 rounded font-bold">{article.category}</span>
-                 <h4 className="font-bold text-stone-900 mt-2 text-sm">{article.title}</h4>
-                 <p className="text-[10px] text-stone-400 mt-1">{article.readCount} 人已阅读</p>
-              </div>
-              <div className="w-16 h-16 bg-stone-100 rounded-xl flex items-center justify-center text-stone-300">
-                 <BookOpen size={24} />
-              </div>
-           </div>
-        ))}
-     </div>
-  </div>
-);
-
-const MascotBubble: React.FC<{ message: string, onClick?: () => void, actionText?: string }> = ({ message, onClick, actionText }) => (
-  <div className="flex items-end space-x-3 mb-6 animate-in slide-in-from-left duration-500">
-    <div className="relative">
-        <div className="w-16 h-16 bg-stone-900 rounded-2xl flex items-center justify-center shadow-xl shadow-stone-900/20 transform hover:-translate-y-1 transition-transform duration-300">
-            <Bot size={40} className="text-[#bef264]" />
-        </div>
-        <div className="text-[10px] text-center font-bold text-stone-400 mt-1">医医 YiYi</div>
+// 模拟参考图中的扁平化医生插图
+const DoctorIllustration = () => (
+  <div className="relative w-40 h-52 flex items-end justify-center">
+    {/* 身体/白大褂 */}
+    <div className="absolute bottom-0 w-28 h-36 bg-white rounded-t-[3rem] shadow-sm border border-stone-100"></div>
+    {/* 深色内衬 */}
+    <div className="absolute bottom-0 w-12 h-24 bg-stone-900 rounded-t-full opacity-10"></div>
+    {/* 头部 */}
+    <div className="absolute top-4 w-16 h-16 bg-[#FFD1BA] rounded-full border-2 border-white shadow-md overflow-hidden">
+        {/* 发型/五官简化示意 */}
+        <div className="w-full h-4 bg-stone-800/20 mt-0"></div>
+        <div className="absolute top-8 left-4 w-1.5 h-1.5 bg-stone-800 rounded-full"></div>
+        <div className="absolute top-8 right-4 w-1.5 h-1.5 bg-stone-800 rounded-full"></div>
     </div>
-    <div className="bg-white p-4 rounded-2xl rounded-tl-none shadow-sm border border-stone-100 max-w-[75%] relative">
-        <p className="text-sm font-bold text-stone-800 leading-relaxed">{message}</p>
-        {actionText && onClick && (
-          <button onClick={onClick} className="mt-2 text-xs font-bold text-[#bef264] bg-stone-900 px-3 py-1.5 rounded-lg flex items-center space-x-1">
-            <span>{actionText}</span>
-            <ArrowRight size={12} />
-          </button>
-        )}
-    </div>
+    {/* 听诊器 */}
+    <div className="absolute top-16 w-20 h-10 border-b-2 border-stone-300 rounded-full"></div>
+    {/* 装饰线条 */}
+    <div className="absolute left-0 top-1/2 w-8 h-px bg-stone-300 -rotate-12"></div>
+    <div className="absolute right-4 top-1/4 w-6 h-px bg-stone-300 rotate-45"></div>
   </div>
 );
 
 const HomeView: React.FC<HomeViewProps> = ({ onChangeTab, journeyStep, setJourneyStep }) => {
-  const [showBookingModal, setShowBookingModal] = useState(false);
-  const [bookingType, setBookingType] = useState<'GENERAL' | 'TREATMENT'>('GENERAL');
-  const [showDiagnosisReport, setShowDiagnosisReport] = useState(false);
-  const [bindStep, setBindStep] = useState(0); 
-
-  useEffect(() => {
-    if (journeyStep === 'REPORT_READY') {
-      setShowDiagnosisReport(true);
-    }
-  }, [journeyStep]);
-
-  const nearbyHospital = MOCK_HOSPITALS.find(h => h.id === 'h1'); 
-
-  const handleBookClick = (type: 'GENERAL' | 'TREATMENT') => {
-    setBookingType(type);
-    setShowBookingModal(true);
-  };
-
-  const confirmBooking = () => {
-    setShowBookingModal(false);
-    if (bookingType === 'GENERAL') setJourneyStep('CHECKUP_BOOKED');
-  };
-
-  const handlePayment = () => {
-    setJourneyStep('ANALYZING');
-    setTimeout(() => setJourneyStep('REPORT_READY'), 3000); // Wait longer for animation
-  };
-
-  const handleAcceptPlan = () => {
-    setShowDiagnosisReport(false);
-    setJourneyStep('TREATMENT_ACTIVE');
-  };
-
-  if (journeyStep === 'ONBOARDING') {
-     return (
-        <div className="h-full bg-[#F2F5E8] animate-in fade-in duration-700">
-           {bindStep === 0 && (
-             <div className="h-full flex flex-col items-center justify-center p-8 text-center space-y-8">
-                <div className="w-32 h-32 bg-stone-900 rounded-[2.5rem] flex items-center justify-center shadow-2xl relative">
-                    <Bot size={64} className="text-[#bef264]" />
-                </div>
-                <div>
-                   <h1 className="text-3xl font-black text-stone-900 mb-2">欢迎, {MOCK_USER.name}</h1>
-                   <p className="text-stone-500 font-medium">完善您的健康数字档案，开启智能分级诊疗服务。</p>
-                </div>
-                <button onClick={() => setBindStep(1)} className="w-full max-w-sm py-4 bg-stone-900 text-[#bef264] font-bold rounded-[2rem] text-lg shadow-xl">开始绑定档案</button>
-             </div>
-           )}
-           {bindStep === 1 && (
-              <div className="h-full flex flex-col items-center justify-center p-8 animate-in slide-in-from-right">
-                 <h2 className="text-2xl font-black text-stone-900 mb-2 text-center">身份核验</h2>
-                 <div className="relative w-64 h-64 my-12 flex items-center justify-center">
-                    {/* Face Scan Animation Overlay */}
-                    <div className="absolute inset-0 border-4 border-stone-200/50 rounded-full"></div>
-                    <div className="absolute inset-0 rounded-full overflow-hidden flex items-center justify-center bg-stone-100">
-                       <ScanFace size={100} className="text-stone-300" />
-                    </div>
-                    {/* The Graphic Loader Ring Overlaying */}
-                    <div className="absolute inset-[-10px] pointer-events-none">
-                       <div className="graphic-loader w-full h-full !bg-transparent !p-0">
-                          {/* We override internal styles slightly for this large scanner */}
-                          <style>{`.graphic-loader::after { background: transparent; } .graphic-loader-content { background: transparent; box-shadow: none; }`}</style>
-                       </div>
-                    </div>
-                 </div>
-                 <button onClick={() => setBindStep(2)} className="w-full max-w-xs py-4 bg-[#bef264] text-stone-900 font-bold rounded-[2rem] text-lg shadow-lg z-10">开始人脸识别</button>
-              </div>
-           )}
-           {bindStep === 2 && (
-              <div className="h-full flex flex-col items-center justify-center p-8 text-center space-y-12">
-                 <div className="graphic-loader w-24 h-24">
-                    <div className="graphic-loader-content">
-                       <RefreshCw size={32} className="text-[#bef264] animate-spin" />
-                    </div>
-                 </div>
-                 <div>
-                    <h2 className="text-xl font-bold text-stone-900">正在同步健康云数据...</h2>
-                    <p className="text-sm text-stone-400 mt-2">获取历史就诊记录与处方信息</p>
-                 </div>
-                 <button onClick={() => setJourneyStep('HOME_DEFAULT')} className="text-stone-400 text-xs font-bold border-b border-stone-300 pb-0.5">跳过演示</button>
-              </div>
-           )}
-        </div>
-     );
-  }
+  // 逻辑：如果是 ONBOARDING 或 HOME_DEFAULT 状态，视为“未就医”
+  // 如果是 CHECKUP_BOOKED 及之后的各种状态，视为“已产生就医行为”
+  const hasFirstVisit = journeyStep !== 'ONBOARDING' && journeyStep !== 'HOME_DEFAULT';
 
   return (
-    <div className="space-y-6 p-5 max-w-md mx-auto relative pb-20 animate-in fade-in duration-500">
+    <div className="space-y-0 p-0 max-w-md mx-auto relative pb-24 animate-in fade-in duration-500">
       
-      {showDiagnosisReport && (
-        <div className="fixed inset-0 bg-stone-100 z-[300] overflow-y-auto animate-in slide-in-from-bottom duration-500">
-           <div className="max-w-md mx-auto min-h-screen bg-white shadow-2xl relative flex flex-col">
-              <div className="bg-[#1c1917] text-white p-6 pb-12">
-                 <div className="flex justify-between items-start">
-                    <div>
-                       <h2 className="text-xl font-bold">三甲-社区联合诊疗意见书</h2>
-                       <p className="text-xs text-stone-400 mt-1 uppercase">Joint Diagnosis Report</p>
-                    </div>
-                 </div>
-              </div>
-              <div className="px-6 py-8 -mt-6 bg-white rounded-t-[2rem] flex-1 space-y-8">
-                  <div>
-                     <h3 className="text-xs font-bold text-stone-400 uppercase tracking-wider mb-2">临床诊断</h3>
-                     <div className="bg-red-50 border-l-4 border-red-500 p-4">
-                        <p className="text-xl font-black text-stone-900">2型糖尿病</p>
-                        <p className="text-stone-600 mt-1">伴周围神经病变</p>
-                     </div>
-                  </div>
-                  <div>
-                     <h3 className="text-xs font-bold text-stone-400 uppercase tracking-wider mb-3">治疗方案</h3>
-                     <div className="space-y-4">
-                        <div className="flex items-start">
-                           <div className="w-6 h-6 rounded-full bg-stone-900 text-white flex items-center justify-center text-xs font-bold mr-3 mt-0.5">1</div>
-                           <p className="text-sm font-bold text-stone-900">二甲双胍 0.5g，每日一次</p>
-                        </div>
-                        <div className="flex items-start">
-                           <div className="w-6 h-6 rounded-full bg-[#bef264] text-stone-900 flex items-center justify-center text-xs font-bold mr-3 mt-0.5">2</div>
-                           <p className="text-sm font-bold text-stone-900">新增注射治疗：甲钴胺 (每两周一次)</p>
-                        </div>
-                     </div>
-                  </div>
-              </div>
-              <div className="p-5 border-t border-stone-100">
-                  <button onClick={handleAcceptPlan} className="w-full bg-[#bef264] text-stone-900 font-bold py-4 rounded-[2rem] text-lg shadow-lg">确认方案并同步至社区医院</button>
-              </div>
+      {/* 1. Hero Section (参照图片：带插图、位置和问候语) */}
+      <section className="bg-[#bef264] pt-12 px-6 pb-4 rounded-b-[4rem] relative overflow-hidden">
+        {/* 背景微调：为了让白色医生更突出，加一个浅色圆圈 */}
+        <div className="absolute top-10 right-10 w-40 h-40 bg-white/20 rounded-full blur-3xl"></div>
+        
+        <div className="flex justify-between items-end relative z-10">
+          <div className="pb-10 space-y-6">
+             {/* 问候气泡 */}
+             <div className="bg-white px-5 py-2.5 rounded-full rounded-bl-none shadow-xl shadow-stone-900/5 inline-block animate-in slide-in-from-left duration-700">
+                <span className="text-stone-900 font-black text-xs uppercase tracking-tighter">早上好，陈奶奶!</span>
+             </div>
+             
+             {/* 位置信息 */}
+             <div className="space-y-1">
+                <p className="text-[9px] font-black text-stone-900/30 uppercase tracking-[0.2em]">当前位置</p>
+                <div className="flex items-center space-x-1.5 text-stone-900">
+                   <MapPin size={16} className="fill-current opacity-40" />
+                   <span className="font-black text-xl tracking-tight">闵行 · 浦江镇</span>
+                </div>
+             </div>
+          </div>
+          
+          <DoctorIllustration />
+        </div>
+
+        {/* 2. 搜索框 (参照图片：大圆角、右侧圆钮) */}
+        <div className="absolute -bottom-8 left-6 right-6">
+           <div className="bg-white h-16 rounded-[2rem] shadow-2xl shadow-stone-900/10 flex items-center px-6 border border-stone-50">
+              <Search className="text-stone-300 mr-3" size={22} />
+              <input 
+                type="text" 
+                placeholder="搜索症状、科室或药品..." 
+                className="bg-transparent flex-1 text-sm font-bold text-stone-900 focus:outline-none placeholder:text-stone-300"
+              />
+              <button className="w-11 h-11 bg-stone-900 rounded-full flex items-center justify-center text-[#bef264] shadow-lg active:scale-90 transition-transform">
+                 <Search size={20} />
+              </button>
            </div>
         </div>
-      )}
-
-      <header className="flex justify-between items-center">
-        <div>
-          <h1 className="text-2xl font-black text-stone-900">早安, {MOCK_USER.name}</h1>
-          <p className="text-sm text-stone-500 mt-0.5">今天感觉怎么样？</p>
-        </div>
-        <button className="p-3 bg-white rounded-full shadow-sm border border-stone-100"><Bell size={20} className="text-stone-700" /></button>
-      </header>
-
-      <VitalsCard />
-      <QuickActions />
-
-      <section className="space-y-6">
-         {journeyStep === 'HOME_DEFAULT' && <MascotBubble message="档案同步完成！如果有身体不适，可以点击下方预约挂号去社区医院做个检查。🏥" />}
-         
-         {journeyStep === 'PAYMENT_PENDING' && (
-            <div className="bg-white border-2 border-red-100 rounded-[2rem] p-6 shadow-sm">
-               <h3 className="font-bold text-lg text-stone-900 mb-4">待支付检查费用</h3>
-               <div className="flex justify-between items-baseline border-b border-stone-100 pb-4 mb-4">
-                  <span className="text-stone-500 text-sm">检查检验费</span>
-                  <span className="text-2xl font-black text-stone-900">¥ 50.00</span>
-               </div>
-               <button onClick={handlePayment} className="w-full bg-[#1677FF] text-white font-bold py-3.5 rounded-xl">一键医保支付</button>
-            </div>
-         )}
-
-         {journeyStep === 'ANALYZING' && (
-            <div className="bg-white rounded-[2rem] p-10 text-center shadow-sm border border-stone-100 flex flex-col items-center">
-                <div className="graphic-loader w-20 h-20 mb-6">
-                   <div className="graphic-loader-content">
-                      <Bot size={32} className="text-[#bef264]" />
-                   </div>
-                </div>
-                <h3 className="font-bold text-lg text-stone-900">AI 正在分析诊断结果...</h3>
-                <p className="text-stone-500 text-sm mt-2">数据已加密传输至瑞金医院 AI 中心</p>
-            </div>
-         )}
-
-         {journeyStep === 'TREATMENT_ACTIVE' && (
-            <div className="bg-[#1c1917] rounded-[2rem] p-6 text-white shadow-xl relative overflow-hidden">
-               <div className="flex items-start">
-                 <div className="p-3.5 bg-stone-800 rounded-2xl mr-4 border border-stone-700">
-                   <Syringe size={28} className="text-[#bef264]" />
-                 </div>
-                 <div className="flex-1">
-                   <h3 className="font-bold text-xl text-[#f2f5e8]">本周注射任务</h3>
-                   <p className="text-stone-400 text-sm mt-1">甲钴胺注射液 • 瑞金医院医嘱</p>
-                   <p className="text-[#bef264] text-xs mt-2 font-bold flex items-center"><MapPin size={12} className="mr-1" /> 浦江社区卫生服务中心</p>
-                   <button onClick={() => handleBookClick('TREATMENT')} className="mt-5 w-full bg-[#bef264] text-stone-900 text-sm font-bold py-3.5 rounded-xl">预约社区执行</button>
-                 </div>
-               </div>
-            </div>
-         )}
       </section>
 
-      <div className="grid grid-cols-2 gap-3">
-          <button onClick={() => handleBookClick('GENERAL')} className="bg-white p-5 rounded-[2rem] shadow-sm flex flex-col items-start h-40 justify-between">
-              <div className="w-12 h-12 rounded-2xl bg-lime-100 flex items-center justify-center text-lime-600"><CalendarPlus size={24} /></div>
-              <h3 className="font-bold text-lg text-stone-900">预约挂号</h3>
-          </button>
-          <button onClick={() => onChangeTab(Tab.RECORDS)} className="bg-white p-5 rounded-[2rem] shadow-sm flex flex-col items-start h-40 justify-between">
-              <div className="w-12 h-12 rounded-2xl bg-orange-100 flex items-center justify-center text-orange-600"><Activity size={24} /></div>
-              <h3 className="font-bold text-lg text-stone-900">一键转档</h3>
-          </button>
-      </div>
+      {/* 内容区域：下移避开搜索框 */}
+      <div className="px-6 pt-16 space-y-10">
+        
+        {/* 3. 核心功能卡片组 (参照图片：圆角方块) */}
+        <section>
+           <h3 className="text-[10px] font-black text-stone-300 uppercase tracking-[0.2em] mb-4 px-2">常用功能</h3>
+           <div className="grid grid-cols-2 gap-4">
+              {/* 核心功能：预约挂号 */}
+              <button 
+                onClick={() => alert("正在跳转预约系统...")}
+                className="bg-white p-6 rounded-[2.5rem] text-left shadow-sm border border-stone-100 transition-all active:scale-95 flex flex-col justify-between h-40"
+              >
+                <div className="bg-[#bef264] w-12 h-12 rounded-2xl flex items-center justify-center text-stone-900">
+                   <CalendarPlus size={24} strokeWidth={2.5} />
+                </div>
+                <div className="space-y-1">
+                   <h4 className="text-stone-900 font-black text-base">预约挂号</h4>
+                   <p className="text-[10px] text-stone-400 font-bold uppercase">Booking</p>
+                </div>
+              </button>
 
-      <HealthFeed />
+              {/* 核心功能：一键转档 */}
+              <button 
+                onClick={() => onChangeTab(Tab.RECORDS)}
+                className="bg-white p-6 rounded-[2.5rem] text-left shadow-sm border border-stone-100 transition-all active:scale-95 flex flex-col justify-between h-40"
+              >
+                <div className="bg-stone-900 w-12 h-12 rounded-2xl flex items-center justify-center text-[#bef264]">
+                   <Share2 size={24} strokeWidth={2.5} />
+                </div>
+                <div className="space-y-1">
+                   <h4 className="text-stone-900 font-black text-base">一键转档</h4>
+                   <p className="text-[10px] text-stone-400 font-bold uppercase">Record Transfer</p>
+                </div>
+              </button>
 
-      {showBookingModal && (
-        <div className="fixed inset-0 bg-stone-900/60 backdrop-blur-md z-[100] flex items-end justify-center">
-          <div className="bg-white w-full max-w-md rounded-t-[2.5rem] p-6 animate-in slide-in-from-bottom">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-black text-stone-900">{bookingType === 'TREATMENT' ? '预约治疗' : '预约挂号'}</h2>
-              <button onClick={() => setShowBookingModal(false)} className="p-2 bg-stone-100 rounded-full"><X size={20} /></button>
-            </div>
-            <div className="space-y-4 mb-8">
-              <div className="p-4 bg-[#F2F5E8] rounded-[2rem] border-2 border-[#bef264]">
-                 <p className="text-xs text-stone-500 font-bold">智能推荐机构</p>
-                 <div className="text-lg font-bold text-stone-900 mt-1">{nearbyHospital?.name}</div>
-              </div>
-              <button onClick={confirmBooking} className="w-full bg-[#bef264] text-stone-900 font-bold py-4 rounded-[2rem] text-lg shadow-lg">确认预约</button>
-            </div>
+              {/* 条件渲染：有了第一次就医后显示的功能 */}
+              {hasFirstVisit && (
+                 <>
+                   <button 
+                    className="bg-stone-900 p-6 rounded-[2.5rem] text-left shadow-xl shadow-stone-900/10 transition-all active:scale-95 flex flex-col justify-between h-40 animate-in zoom-in duration-500"
+                   >
+                    <div className="bg-white/10 w-12 h-12 rounded-2xl flex items-center justify-center text-[#bef264]">
+                       <Pill size={24} strokeWidth={2.5} />
+                    </div>
+                    <div className="space-y-1">
+                       <h4 className="text-white font-black text-base">用药续方</h4>
+                       <p className="text-[10px] text-stone-500 font-bold uppercase">Prescription</p>
+                    </div>
+                   </button>
+
+                   <button 
+                    className="bg-white p-6 rounded-[2.5rem] text-left shadow-sm border border-stone-100 transition-all active:scale-95 flex flex-col justify-between h-40 animate-in zoom-in duration-500 delay-75"
+                   >
+                    <div className="bg-orange-50 w-12 h-12 rounded-2xl flex items-center justify-center text-orange-500">
+                       <MessageSquare size={24} strokeWidth={2.5} />
+                    </div>
+                    <div className="space-y-1">
+                       <h4 className="text-stone-900 font-black text-base">下次预约</h4>
+                       <p className="text-[10px] text-stone-400 font-bold uppercase">Follow-up</p>
+                    </div>
+                   </button>
+                 </>
+              )}
+           </div>
+        </section>
+
+        {/* 4. 底部引导区块 (参照图片：带插图的长方形卡片) */}
+        <section>
+          <div className="flex justify-between items-center mb-5 px-2">
+             <h3 className="font-black text-stone-900 tracking-tight text-lg">就医助手指南</h3>
+             <ArrowRight size={18} className="text-stone-300" />
           </div>
-        </div>
-      )}
+          <div className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-stone-50 flex items-center justify-between group active:bg-stone-50 transition-colors relative overflow-hidden">
+             <div className="space-y-3 max-w-[60%] relative z-10">
+                <h4 className="font-black text-stone-900 text-xl leading-tight">远离<br/><span className="text-[#bef264] bg-stone-900 px-2 py-0.5 rounded-md">慢病</span>困扰</h4>
+                <p className="text-[11px] text-stone-400 font-medium leading-relaxed">申请专家联合诊疗方案，获取长效健康监测指南。</p>
+                <button 
+                  onClick={() => onChangeTab(Tab.RECORDS)}
+                  className="bg-stone-900 text-[#bef264] px-5 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest mt-4 shadow-lg shadow-stone-900/20 active:scale-95 transition-transform"
+                >
+                  立即申请转档
+                </button>
+             </div>
+             <div className="w-32 h-32 bg-[#F2F5E8] rounded-full flex items-center justify-center text-stone-900 shrink-0 transform translate-x-4 rotate-6">
+                <Share2 size={60} strokeWidth={1} className="opacity-20" />
+                <Bot size={50} className="absolute text-stone-900" strokeWidth={2.5} />
+             </div>
+          </div>
+        </section>
+
+        {/* 5. 动态提醒 (仅在已就医产生后续计划时) */}
+        {journeyStep === 'TREATMENT_ACTIVE' && (
+            <section className="animate-in slide-in-from-bottom duration-500">
+               <div className="bg-[#bef264] rounded-[2.5rem] p-7 shadow-2xl shadow-lime-900/10 flex items-center space-x-5">
+                  <div className="w-16 h-16 bg-stone-900 rounded-3xl flex items-center justify-center text-[#bef264] shrink-0 shadow-xl shadow-stone-900/20">
+                     <Syringe size={30} strokeWidth={2.5} />
+                  </div>
+                  <div className="flex-1">
+                     <p className="text-[9px] font-black text-stone-900/40 uppercase tracking-widest mb-1">正在进行中的计划</p>
+                     <h4 className="font-black text-stone-900 text-lg leading-tight">甲钴胺注射治疗</h4>
+                     <p className="text-xs text-stone-900/60 font-bold flex items-center mt-1"><MapPin size={12} className="mr-1" /> 浦江社区医院 · 注射室</p>
+                  </div>
+                  <button 
+                    onClick={() => onChangeTab(Tab.PASS)}
+                    className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-stone-900 shadow-lg active:scale-90 transition-transform"
+                  >
+                     <ArrowRight size={24} />
+                  </button>
+               </div>
+            </section>
+        )}
+
+      </div>
     </div>
   );
 };

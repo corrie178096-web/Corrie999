@@ -12,6 +12,7 @@
         font-family: 'Noto Sans SC', sans-serif;
         background-color: #f3f4f6; /* gray-100 */
         -webkit-tap-highlight-color: transparent;
+        color: #1c1917; /* stone-900 */
       }
       /* Hide scrollbar for clean UI in lists */
       .no-scrollbar::-webkit-scrollbar {
@@ -22,7 +23,7 @@
         scrollbar-width: none;
       }
 
-      /* --- New Clean Graphic Loader Styles --- */
+      /* --- New Clean Graphic Loader Styles (KEPT) --- */
       @keyframes loader-spin-slow {
         0% { transform: rotate(0deg); }
         100% { transform: rotate(360deg); }
@@ -41,16 +42,15 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        /* Default size can be overridden by Tailwind classes */
       }
       
-      /* 1. The Outer Pattern Ring (Dotted/Textured) - "The Green Pattern" */
+      /* 1. The Outer Pattern Ring (Dotted/Textured) */
       .graphic-loader::before {
         content: '';
         position: absolute;
-        inset: -15%; /* Slightly larger than container */
+        inset: -15%;
         border-radius: 50%;
-        border: 3px dotted #bef264; /* Lime Green Pattern */
+        border: 3px dotted #bef264; /* Lime Green */
         opacity: 0.6;
         animation: loader-spin-slow 10s linear infinite;
       }

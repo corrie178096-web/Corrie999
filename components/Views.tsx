@@ -1,67 +1,43 @@
 
-import React from 'react';
-import { Calendar as CalendarIcon, ChevronRight, Settings, Users, Heart, LogOut, Phone, CreditCard, ShieldCheck } from 'lucide-react';
-import { MOCK_USER, MOCK_REMINDERS } from '../constants';
+import React, { useState } from 'react';
+import { Calendar as CalendarIcon, ChevronRight, Settings, Users, Heart, LogOut, Phone, CreditCard, ShieldCheck, Watch, Bluetooth, RefreshCw, Activity, HeartPulse, Thermometer, TrendingUp, Minus } from 'lucide-react';
+import { MOCK_USER, MOCK_REMINDERS, MOCK_VITALS } from '../constants';
 import { AuthMethod } from '../types';
 
-// --- Plan View ---
+// --- Plan View --- (保持不变，或小调以适应风格)
 export const PlanView: React.FC = () => {
   const days = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
   const today = new Date().getDay() - 1; 
 
   return (
-    <div className="p-5 max-w-md mx-auto space-y-6">
-      <header className="flex justify-between items-end pt-2">
-        <h1 className="text-2xl font-black text-stone-900">健康日历</h1>
-        <p className="text-sm text-stone-900 font-bold bg-[#bef264] px-3 py-1 rounded-lg">2024年 10月</p>
+    <div className="p-6 max-w-md mx-auto space-y-6">
+      <header className="flex justify-between items-end pt-4">
+        <h1 className="text-3xl font-black text-stone-900">健康日历</h1>
+        <p className="text-xs text-stone-900 font-black bg-[#bef264] px-4 py-2 rounded-full uppercase tracking-widest">Oct 2024</p>
       </header>
 
       {/* Calendar Strip */}
-      <div className="flex justify-between bg-white p-4 rounded-[2rem] shadow-sm border border-stone-100">
+      <div className="flex justify-between bg-white p-6 rounded-[2.5rem] shadow-sm border border-stone-100">
         {days.map((day, idx) => {
           const isToday = idx === (today < 0 ? 6 : today); 
-          const isThursday = idx === 3; 
           return (
-            <div key={day} className={`flex flex-col items-center justify-center w-10 h-16 rounded-2xl relative transition-all ${isToday ? 'bg-stone-900 text-[#bef264] shadow-lg shadow-stone-500/20 scale-110' : 'text-stone-400'}`}>
-              <span className="text-[10px] mb-1 font-bold">{day}</span>
-              <span className={`text-lg font-bold ${isToday ? 'text-[#bef264]' : 'text-stone-800'}`}>{24 + idx}</span>
-              {isThursday && !isToday && <div className="absolute bottom-1 w-1.5 h-1.5 bg-orange-400 rounded-full"></div>}
+            <div key={day} className={`flex flex-col items-center justify-center w-11 h-20 rounded-3xl transition-all ${isToday ? 'bg-stone-900 text-[#bef264] shadow-xl shadow-stone-300 scale-110' : 'text-stone-300'}`}>
+              <span className="text-[10px] mb-2 font-black uppercase">{day.replace('周', '')}</span>
+              <span className={`text-lg font-black ${isToday ? 'text-[#bef264]' : 'text-stone-800'}`}>{24 + idx}</span>
             </div>
           )
         })}
       </div>
 
       <div className="space-y-4">
-        <h2 className="font-bold text-stone-800 text-lg">今日任务</h2>
-        {/* Mocking a completed task */}
-         <div className="flex items-start p-5 bg-white rounded-[2rem] border border-stone-100 opacity-60">
-             <div className="flex flex-col items-center mr-5 pt-1">
-                <span className="text-sm font-bold text-stone-400">08:00</span>
-                <div className="h-full w-0.5 bg-stone-200 mt-2 rounded-full"></div>
+        <h2 className="font-black text-stone-900 text-xl px-2">今日任务</h2>
+         <div className="flex items-start p-6 bg-white rounded-[2.5rem] border border-stone-100 opacity-50">
+             <div className="mr-6 pt-1">
+                <span className="text-xs font-black text-stone-400">08:00</span>
              </div>
              <div>
-               <h3 className="font-bold text-stone-500 line-through">口服二甲双胍</h3>
-               <p className="text-xs text-stone-400 mt-1 font-medium">已完成 • 早餐后</p>
-             </div>
-        </div>
-
-        {/* Future Task */}
-        <div className="flex items-start p-5 bg-stone-900 rounded-[2rem] shadow-xl shadow-stone-300 relative overflow-hidden group">
-             {/* Decorative */}
-             <div className="absolute top-0 right-0 w-32 h-32 bg-[#bef264] rounded-full -mr-16 -mt-16 opacity-10 group-hover:opacity-20 transition-opacity"></div>
-
-             <div className="absolute right-0 top-0 bg-[#bef264] text-stone-900 text-[10px] font-bold px-3 py-1.5 rounded-bl-2xl">
-               后天
-             </div>
-             <div className="flex flex-col items-center mr-5 pt-1">
-                <span className="text-sm font-bold text-[#bef264]">09:00</span>
-             </div>
-             <div className="relative z-10">
-               <h3 className="font-bold text-white text-lg">营养神经注射</h3>
-               <p className="text-sm text-stone-400 mt-1">浦江社区卫生服务中心</p>
-               <button className="mt-4 text-xs bg-white/10 text-white font-bold px-4 py-2 rounded-xl hover:bg-white/20 transition-colors">
-                 查看预约详情
-               </button>
+               <h3 className="font-black text-stone-500 line-through">口服二甲双胍</h3>
+               <p className="text-[10px] font-black text-stone-300 uppercase tracking-widest mt-1">已完成 • 早餐后</p>
              </div>
         </div>
       </div>
@@ -76,81 +52,131 @@ interface ProfileViewProps {
 }
 
 export const ProfileView: React.FC<ProfileViewProps> = ({ onLogout, authMethod }) => {
-  return (
-    <div className="bg-[#F2F5E8] h-full">
-      <div className="bg-stone-900 pt-16 pb-32 px-6 rounded-b-[3rem] shadow-2xl relative overflow-hidden">
-         {/* Abstract BG */}
-         <div className="absolute top-0 left-0 w-full h-full opacity-10 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-lime-400 via-stone-900 to-stone-900"></div>
+  const [deviceState, setDeviceState] = useState<'DISCONNECTED' | 'CONNECTING' | 'CONNECTED'>('DISCONNECTED');
 
-         <div className="flex items-center space-x-5 max-w-md mx-auto relative z-10">
-           <div className="w-24 h-24 rounded-3xl bg-[#bef264] text-stone-900 flex items-center justify-center text-4xl font-black shadow-lg shadow-lime-900/20 transform rotate-3">
+  const handleConnect = () => {
+    setDeviceState('CONNECTING');
+    setTimeout(() => {
+      setDeviceState('CONNECTED');
+    }, 2500);
+  };
+
+  return (
+    <div className="bg-[#f2f5e8]/30 min-h-full pb-28">
+      {/* 仿参考图的个人信息头部 */}
+      <section className="bg-stone-900 pt-20 pb-24 px-8 rounded-b-[3.5rem] relative overflow-hidden shadow-2xl">
+         <div className="absolute top-0 right-0 w-64 h-64 bg-[#bef264]/10 rounded-full blur-[80px] -mr-32 -mt-32"></div>
+         
+         <div className="flex items-center space-x-6 relative z-10 max-w-md mx-auto">
+           <div className="w-24 h-24 rounded-[2.5rem] bg-[#bef264] text-stone-900 flex items-center justify-center text-4xl font-black shadow-xl shadow-stone-900/40 transform -rotate-3 ring-4 ring-stone-800">
              {MOCK_USER.name[0]}
            </div>
-           <div className="text-white">
-             <h1 className="text-3xl font-black tracking-tight">{MOCK_USER.name}</h1>
-             <p className="text-stone-400 text-sm mt-2 flex items-center font-medium">
-               <ShieldCheck size={14} className="text-[#bef264] mr-1.5" />
-               已实名认证 · {MOCK_USER.location.split(' ')[0]}
-             </p>
+           <div className="space-y-1">
+             <h1 className="text-3xl font-black text-white tracking-tight">{MOCK_USER.name}</h1>
+             <div className="bg-stone-800 px-3 py-1 rounded-full inline-flex items-center space-x-2 border border-stone-700">
+                <ShieldCheck size={12} className="text-[#bef264]" />
+                <span className="text-[10px] font-black text-stone-400 uppercase tracking-widest">已实名认证</span>
+             </div>
            </div>
          </div>
-      </div>
+      </section>
 
-      <div className="px-5 -mt-24 max-w-md mx-auto space-y-5 pb-12 relative z-20">
-        {/* Stats / Balance Card */}
-        <div className="bg-white p-6 rounded-[2.5rem] shadow-xl flex justify-between items-center">
-           <div className="flex items-center space-x-4">
-             <div className="bg-[#F2F5E8] p-3 rounded-2xl text-stone-900">
-               <CreditCard size={28} />
-             </div>
-             <div>
-               <p className="text-xs text-stone-500 font-bold uppercase tracking-wider">医保账户余额</p>
-               <p className="text-2xl font-black text-stone-900 mt-0.5">¥ {MOCK_USER.medicareBalance}</p>
-             </div>
+      <div className="px-6 -mt-16 max-w-md mx-auto space-y-6">
+        
+        {/* 核心改动：智能设备监测区 */}
+        <section className="bg-white p-6 rounded-[2.5rem] shadow-xl border border-stone-50">
+           <div className="flex justify-between items-center mb-6">
+              <h3 className="font-black text-stone-900 tracking-tight flex items-center">
+                 <Watch size={20} className="mr-2 text-stone-300" />
+                 智能健康监测
+              </h3>
+              {deviceState === 'CONNECTED' && (
+                 <span className="flex h-2 w-2 relative">
+                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                   <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                 </span>
+              )}
            </div>
-           
-           {/* Payment Linking Indicator */}
-           {(authMethod === 'WECHAT' || authMethod === 'ALIPAY') && (
-             <div className="text-right">
-               <span className={`text-[10px] px-2 py-1 rounded-lg font-bold flex items-center justify-end ${authMethod === 'WECHAT' ? 'bg-green-50 text-green-600' : 'bg-blue-50 text-blue-600'}`}>
-                 {authMethod === 'WECHAT' ? '微信支付已免密' : '支付宝已绑定'}
-               </span>
-             </div>
-           )}
-        </div>
 
-        {/* Menu */}
-        <div className="bg-white rounded-[2.5rem] shadow-sm overflow-hidden border border-stone-100 p-2">
-          <MenuItem 
-            icon={<Users size={22} className="text-blue-500"/>} 
-            label="家庭关怀 (子女账号)" 
-            value={MOCK_USER.linkedFamilyMembers[0].split(' ')[0]} 
-          />
-          <div className="h-px bg-stone-50 mx-6"></div>
-          <MenuItem 
-            icon={<Heart size={22} className="text-red-500"/>} 
-            label="我的收藏医生" 
-            value="2人"
-          />
-          <div className="h-px bg-stone-50 mx-6"></div>
-           <MenuItem 
-            icon={<Phone size={22} className="text-[#bef264] fill-stone-900"/>} 
-            label="紧急联系人" 
-            value="女儿"
-          />
-          <div className="h-px bg-stone-50 mx-6"></div>
-          <MenuItem 
-            icon={<Settings size={22} className="text-stone-400"/>} 
-            label="设置" 
-          />
-        </div>
+           {deviceState === 'DISCONNECTED' && (
+              <div className="py-4 text-center space-y-4">
+                 <div className="w-20 h-20 bg-stone-50 rounded-[2rem] flex items-center justify-center mx-auto text-stone-200">
+                    <Bluetooth size={40} />
+                 </div>
+                 <p className="text-xs text-stone-400 font-bold leading-relaxed px-4">同步您的智能手表数据，实时掌握血糖与心率波动。</p>
+                 <button 
+                   onClick={handleConnect}
+                   className="w-full bg-stone-900 text-[#bef264] py-4 rounded-[1.5rem] font-black text-sm uppercase tracking-widest shadow-lg shadow-stone-100"
+                 >
+                   开始蓝牙连接
+                 </button>
+              </div>
+           )}
+
+           {deviceState === 'CONNECTING' && (
+              <div className="py-12 flex flex-col items-center justify-center space-y-6">
+                 <div className="graphic-loader w-20 h-20">
+                    <div className="graphic-loader-content">
+                       <Watch size={32} className="text-[#bef264]" />
+                    </div>
+                 </div>
+                 <p className="text-sm font-black text-stone-900 animate-pulse uppercase tracking-widest">正在搜索邻近设备...</p>
+              </div>
+           )}
+
+           {deviceState === 'CONNECTED' && (
+              <div className="grid grid-cols-2 gap-4 animate-in zoom-in duration-500">
+                 {MOCK_VITALS.map((vital, idx) => (
+                    <div key={idx} className={`p-5 rounded-[2rem] relative overflow-hidden ${vital.status === 'HIGH' ? 'bg-orange-50 border-orange-100' : 'bg-[#F2F5E8] border-[#bef264]/20'} border`}>
+                       <div className="flex justify-between items-start mb-4">
+                          <div className={`w-8 h-8 rounded-xl flex items-center justify-center ${vital.status === 'HIGH' ? 'bg-white text-orange-500' : 'bg-white text-stone-900'} shadow-sm`}>
+                             {vital.type === 'SUGAR' ? <Thermometer size={16} /> : <Activity size={16} />}
+                          </div>
+                          {vital.trend === 'UP' ? <TrendingUp size={14} className="text-orange-400"/> : <Minus size={14} className="text-stone-300"/>}
+                       </div>
+                       <div className="space-y-1">
+                          <p className="text-[10px] font-black text-stone-400 uppercase tracking-widest">{vital.type === 'SUGAR' ? 'Blood Sugar' : 'Blood Pressure'}</p>
+                          <div className="flex items-baseline space-x-1">
+                             <span className="text-2xl font-black text-stone-900">{vital.value}</span>
+                             <span className="text-[10px] font-black text-stone-400">{vital.unit}</span>
+                          </div>
+                       </div>
+                    </div>
+                 ))}
+                 {/* 仿参考图的额外数据项 */}
+                 <div className="col-span-2 bg-stone-50 p-5 rounded-[2rem] flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                       <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-red-500 shadow-sm">
+                          <HeartPulse size={20} />
+                       </div>
+                       <div>
+                          <p className="text-xs font-black text-stone-900">静息心率</p>
+                          <p className="text-[10px] text-stone-400 font-bold">10分钟前更新</p>
+                       </div>
+                    </div>
+                    <span className="text-xl font-black text-stone-900">72 <span className="text-[10px] text-stone-400">BPM</span></span>
+                 </div>
+              </div>
+           )}
+        </section>
+
+        {/* 其他菜单项 */}
+        <section className="bg-white rounded-[2.5rem] shadow-sm border border-stone-100 p-2">
+           <MenuItem icon={<Users size={20} className="text-blue-500" />} label="家庭关怀 (子女账号)" value="李敏" />
+           <div className="h-px bg-stone-50 mx-6"></div>
+           <MenuItem icon={<CreditCard size={20} className="text-stone-900" />} label="医保账户管理" value={`余额 ¥${MOCK_USER.medicareBalance}`} />
+           <div className="h-px bg-stone-50 mx-6"></div>
+           <MenuItem icon={<Phone size={20} className="text-orange-500" />} label="紧急联系人设置" />
+           <div className="h-px bg-stone-50 mx-6"></div>
+           <MenuItem icon={<Settings size={20} className="text-stone-300" />} label="系统通用设置" />
+        </section>
 
         <button 
            onClick={onLogout}
-           className="w-full py-4 bg-[#F2F5E8] text-stone-500 font-bold rounded-[2rem] mt-4 flex items-center justify-center space-x-2 border border-transparent hover:bg-stone-200 hover:text-stone-800 transition-colors"
+           className="w-full py-5 bg-stone-50 text-stone-400 font-black rounded-[2rem] flex items-center justify-center space-x-2 border-2 border-stone-100 hover:bg-stone-100 hover:text-stone-600 transition-all uppercase tracking-widest text-xs"
         >
-           <LogOut size={20} />
-           <span>退出登录</span>
+           <LogOut size={18} />
+           <span>退出邻医安</span>
         </button>
       </div>
     </div>
@@ -158,14 +184,14 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ onLogout, authMethod }
 };
 
 const MenuItem: React.FC<{icon: React.ReactNode, label: string, value?: string}> = ({ icon, label, value }) => (
-  <div className="flex items-center justify-between p-5 hover:bg-[#F2F5E8] active:bg-[#e9f2d0] rounded-3xl transition-colors cursor-pointer group">
-    <div className="flex items-center space-x-4 text-stone-700">
+  <div className="flex items-center justify-between p-6 hover:bg-stone-50 active:bg-stone-100 rounded-[2rem] transition-colors cursor-pointer group">
+    <div className="flex items-center space-x-4">
       <div className="group-hover:scale-110 transition-transform">{icon}</div>
-      <span className="font-bold text-sm text-stone-800">{label}</span>
+      <span className="font-black text-sm text-stone-800">{label}</span>
     </div>
     <div className="flex items-center space-x-2">
-      {value && <span className="text-xs font-bold text-stone-400 bg-stone-100 px-2 py-1 rounded-lg">{value}</span>}
-      <ChevronRight size={18} className="text-stone-300 group-hover:text-stone-500" />
+      {value && <span className="text-[10px] font-black text-stone-400 bg-stone-50 px-2 py-1 rounded-lg uppercase">{value}</span>}
+      <ChevronRight size={18} className="text-stone-200 group-hover:text-stone-500" />
     </div>
   </div>
 );

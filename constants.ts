@@ -19,11 +19,38 @@ export const MOCK_FAMILY_USER: UserProfile = {
   avatar: "LM"
 };
 
-export const MOCK_DOCTOR_USER = {
-  name: "李医生",
+// 扩展社区医生数据
+export const MOCK_COMMUNITY_DOCTOR = {
+  name: "李清泉",
+  title: "全科主任医师",
   hospital: "浦江社区卫生服务中心",
-  department: "全科/注射室",
-  id: "DOC_202488"
+  department: "全科门诊",
+  id: "DOC_202488",
+  rating: 4.9,
+  stats: {
+    totalPatients: 1240,
+    referralRate: "92%",
+    consultationTime: "8.5min",
+    mdtJoined: 12
+  },
+  tags: ["上海市优秀全科医生", "糖尿病管理专家"]
+};
+
+// 扩展三甲专家数据
+export const MOCK_SPECIALIST_DOCTOR = {
+  name: "刘晓静",
+  title: "内分泌科 主任医师",
+  hospital: "上海交通大学医学院附属瑞金医院",
+  department: "内分泌与代谢科",
+  id: "SP_99201",
+  rating: 5.0,
+  stats: {
+    totalConsults: 856,
+    successRate: "98.5%",
+    studentCount: 15,
+    mdtLed: 42
+  },
+  tags: ["长江学者", "国家重点实验室成员", "博士生导师"]
 };
 
 // Represents an active appointment for the Pass View
@@ -82,7 +109,6 @@ export const MOCK_WAITING_QUEUE: QueuePatient[] = [
   },
 ];
 
-// NEW: Rich Specialist Data
 export const MOCK_SPECIALIST_REFERRALS: QueuePatient[] = [
   {
      id: 'ref1',

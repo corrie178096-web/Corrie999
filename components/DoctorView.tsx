@@ -1,7 +1,8 @@
+
 import React, { useState } from 'react';
-import { CheckCircle, Syringe, User, AlertCircle, Calendar, FileText, ChevronLeft, ShieldCheck, Activity, Clock, Inbox, FileInput, ArrowRight, X, UserCheck, Phone, Clipboard, Pill, Stethoscope, FilePlus, Send, Database, Brain, Zap, Users, GraduationCap, Radio, Search, Bell, AlertTriangle, ScanLine, ChevronRight, BarChart2, Microscope, Image as ImageIcon, MessageSquare, TrendingUp, Building2 } from 'lucide-react';
-import { MOCK_DOCTOR_USER, MOCK_DOCTOR_TASKS, MOCK_USER, MOCK_RECORDS, MOCK_WAITING_QUEUE, MOCK_SPECIALIST_REFERRALS } from '../constants';
-import { QueuePatient, DoctorType } from '../types';
+import { CheckCircle, Syringe, User, AlertCircle, Calendar, FileText, ChevronLeft, ShieldCheck, Activity, Clock, Inbox, FileInput, ArrowRight, X, UserCheck, Phone, Clipboard, Pill, Stethoscope, FilePlus, Send, Database, Brain, Zap, Users, GraduationCap, Radio, Search, Bell, AlertTriangle, ScanLine, ChevronRight, BarChart2, Microscope, Image as ImageIcon, MessageSquare, TrendingUp, Building2, Star, Award, Settings, LogOut, Verified, Briefcase, Share2, Users2, Target } from 'lucide-react';
+import { MOCK_USER, MOCK_RECORDS, MOCK_WAITING_QUEUE, MOCK_SPECIALIST_REFERRALS, MOCK_COMMUNITY_DOCTOR, MOCK_SPECIALIST_DOCTOR } from '../constants';
+import { QueuePatient, DoctorType, Tab } from '../types';
 
 const DoctorView: React.FC<{ activeTab: string, doctorType: DoctorType }> = ({ activeTab, doctorType }) => {
   // --- Community States ---
@@ -12,8 +13,169 @@ const DoctorView: React.FC<{ activeTab: string, doctorType: DoctorType }> = ({ a
 
   // --- Specialist States ---
   const [consultPatient, setConsultPatient] = useState<QueuePatient | null>(null); 
-  const [diagnosisStep, setDiagnosisStep] = useState(0); 
   const [consultTab, setConsultTab] = useState<'OVERVIEW' | 'LABS' | 'IMAGES' | 'MDT'>('OVERVIEW');
+
+  // --- Doctor Profile Stats Components ---
+  const DoctorProfile = () => {
+    const isCommunity = doctorType === 'COMMUNITY';
+    const data = isCommunity ? MOCK_COMMUNITY_DOCTOR : MOCK_SPECIALIST_DOCTOR;
+    const accentColor = isCommunity ? 'text-orange-500' : 'text-indigo-600';
+    const bgColor = isCommunity ? 'bg-orange-500' : 'bg-indigo-600';
+
+    return (
+      <div className="min-h-full bg-gray-50 pb-32 animate-in fade-in duration-500">
+         {/* 1. Header (Professional Identity) */}
+         <section className={`${bgColor} pt-20 pb-24 px-8 rounded-b-[3.5rem] relative overflow-hidden shadow-2xl`}>
+            <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-[80px] -mr-32 -mt-32"></div>
+            <div className="absolute bottom-0 left-0 w-48 h-48 bg-black/10 rounded-full blur-[60px] -ml-24 -mb-24"></div>
+            
+            <div className="flex items-center space-x-6 relative z-10 max-w-md mx-auto">
+               <div className="w-24 h-24 rounded-[2.5rem] bg-white text-stone-900 flex items-center justify-center text-4xl font-black shadow-2xl transform -rotate-3 ring-4 ring-white/20">
+                  {data.name[0]}
+               </div>
+               <div className="space-y-1">
+                  <div className="flex items-center space-x-2">
+                    <h1 className="text-3xl font-black text-white tracking-tight">{data.name}</h1>
+                    <Verified size={20} className="text-yellow-400 fill-yellow-400/20" />
+                  </div>
+                  <p className="text-white/80 font-bold text-sm">{data.title}</p>
+                  <div className="bg-black/20 px-3 py-1 rounded-full inline-flex items-center space-x-2 border border-white/10 backdrop-blur-sm">
+                     <Building2 size={12} className="text-white" />
+                     <span className="text-[10px] font-black text-white uppercase tracking-widest">{data.hospital}</span>
+                  </div>
+               </div>
+            </div>
+         </section>
+
+         <div className="px-6 -mt-12 max-w-md mx-auto space-y-6 relative z-20">
+            {/* 2. Business Dashboard (Stats) */}
+            <div className="bg-white p-6 rounded-[2.5rem] shadow-xl border border-stone-50 grid grid-cols-2 gap-4">
+               <div className="space-y-1 p-2">
+                  <p className="text-[10px] font-black text-stone-400 uppercase tracking-widest">
+                     {isCommunity ? '累计管理患者' : '累计专家会诊'}
+                  </p>
+                  <div className="flex items-baseline space-x-1">
+                    <span className={`text-3xl font-black text-stone-900`}>
+                       {/* Fix: Directly accessing mock objects to resolve property access issues on union type */}
+                       {isCommunity ? MOCK_COMMUNITY_DOCTOR.stats.totalPatients : MOCK_SPECIALIST_DOCTOR.stats.totalConsults}
+                    </span>
+                    <span className="text-[10px] font-black text-stone-400">位</span>
+                  </div>
+               </div>
+               <div className="space-y-1 p-2 border-l border-stone-100">
+                  <p className="text-[10px] font-black text-stone-400 uppercase tracking-widest">
+                     {isCommunity ? '转诊闭环率' : '会诊成功率'}
+                  </p>
+                  <div className="flex items-baseline space-x-1">
+                    <span className={`text-3xl font-black ${accentColor}`}>
+                       {/* Fix: Directly accessing mock objects to resolve property access issues on union type */}
+                       {isCommunity ? MOCK_COMMUNITY_DOCTOR.stats.referralRate : MOCK_SPECIALIST_DOCTOR.stats.successRate}
+                    </span>
+                  </div>
+               </div>
+               <div className="col-span-2 h-px bg-stone-100 my-1"></div>
+               <div className="space-y-1 p-2">
+                  <p className="text-[10px] font-black text-stone-400 uppercase tracking-widest">
+                     {isCommunity ? '参与MDT次数' : '带教医生/学生'}
+                  </p>
+                  <div className="flex items-baseline space-x-1">
+                    <span className="text-2xl font-black text-stone-900">
+                       {/* Fix: Directly accessing mock objects to resolve property access issues on union type */}
+                       {isCommunity ? MOCK_COMMUNITY_DOCTOR.stats.mdtJoined : MOCK_SPECIALIST_DOCTOR.stats.studentCount}
+                    </span>
+                    <span className="text-[10px] font-black text-stone-400">
+                       {isCommunity ? '次' : '人'}
+                    </span>
+                  </div>
+               </div>
+               <div className="space-y-1 p-2 border-l border-stone-100">
+                  <p className="text-[10px] font-black text-stone-400 uppercase tracking-widest">患者综合评分</p>
+                  <div className="flex items-center space-x-1">
+                    <span className="text-2xl font-black text-stone-900">{data.rating}</span>
+                    <Star size={16} className="text-yellow-400 fill-yellow-400" />
+                  </div>
+               </div>
+            </div>
+
+            {/* 3. Professional Capabilities & Tags */}
+            <section className="bg-white p-6 rounded-[2.5rem] shadow-sm border border-stone-100">
+               <h3 className="font-black text-stone-900 tracking-tight flex items-center mb-4">
+                  <Award size={20} className="mr-2 text-stone-300" />
+                  专业资历与标签
+               </h3>
+               <div className="flex flex-wrap gap-2">
+                  {data.tags.map((tag, i) => (
+                    <span key={i} className={`px-4 py-2 rounded-2xl text-[11px] font-black ${isCommunity ? 'bg-orange-50 text-orange-600 border border-orange-100' : 'bg-indigo-50 text-indigo-600 border border-indigo-100'}`}>
+                       {tag}
+                    </span>
+                  ))}
+               </div>
+            </section>
+
+            {/* 4. Professional Tools Menu */}
+            <section className="bg-white rounded-[2.5rem] shadow-sm overflow-hidden border border-stone-100 p-2">
+               <div className="px-6 py-4 flex items-center justify-between border-b border-stone-50">
+                  <h3 className="font-black text-stone-900 tracking-tight flex items-center">
+                     <Briefcase size={18} className="mr-2 text-stone-300" />
+                     执业工具
+                  </h3>
+               </div>
+               
+               <MenuItem 
+                 icon={<Calendar size={22} className={accentColor}/>} 
+                 label="排班与接诊设置" 
+                 value="开启中" 
+               />
+               <div className="h-px bg-stone-50 mx-6"></div>
+               <MenuItem 
+                 icon={<Share2 size={22} className="text-blue-500"/>} 
+                 label="远程协作中心 (MDT)" 
+                 value={`${isCommunity ? '已加入2个' : '待处理1个'}`}
+               />
+               <div className="h-px bg-stone-50 mx-6"></div>
+               <MenuItem 
+                 icon={<GraduationCap size={22} className="text-purple-500"/>} 
+                 label="继续教育与学分" 
+                 value="85.5 分"
+               />
+               <div className="h-px bg-stone-50 mx-6"></div>
+               <MenuItem 
+                 icon={<Users2 size={22} className="text-teal-500"/>} 
+                 label="协作医生网络" 
+                 value="12 成员"
+               />
+            </section>
+
+            {/* 5. Account Settings */}
+            <section className="bg-white rounded-[2.5rem] shadow-sm border border-stone-100 p-2">
+               <MenuItem icon={<Settings size={22} className="text-stone-300"/>} label="系统偏好设置" />
+               <div className="h-px bg-stone-50 mx-6"></div>
+               <MenuItem icon={<Radio size={22} className="text-stone-300"/>} label="通知与隐私" />
+            </section>
+
+            <button 
+              className="w-full py-5 bg-stone-50 text-stone-400 font-black rounded-[2rem] flex items-center justify-center space-x-2 border-2 border-stone-100 hover:bg-stone-100 hover:text-stone-600 transition-all uppercase tracking-widest text-xs"
+            >
+              <LogOut size={18} />
+              <span>安全退出医生端</span>
+            </button>
+         </div>
+      </div>
+    );
+  };
+
+  const MenuItem: React.FC<{icon: React.ReactNode, label: string, value?: string}> = ({ icon, label, value }) => (
+    <div className="flex items-center justify-between p-6 hover:bg-stone-50 active:bg-stone-100 rounded-[2rem] transition-colors cursor-pointer group">
+      <div className="flex items-center space-x-4">
+        <div className="group-hover:scale-110 transition-transform">{icon}</div>
+        <span className="font-black text-sm text-stone-800">{label}</span>
+      </div>
+      <div className="flex items-center space-x-2">
+        {value && <span className="text-[10px] font-black text-stone-400 bg-stone-50 px-2 py-1 rounded-lg uppercase">{value}</span>}
+        <ChevronRight size={18} className="text-stone-200 group-hover:text-stone-500" />
+      </div>
+    </div>
+  );
 
   // =================================================================================
   // SHARED: PATIENT 360 MODAL (Community Version)
@@ -72,10 +234,6 @@ const DoctorView: React.FC<{ activeTab: string, doctorType: DoctorType }> = ({ a
      </div>
   );
 
-  // =================================================================================
-  // SUB-COMPONENTS
-  // =================================================================================
-
   const ReferralReviewModal = () => (
     <div className="fixed inset-0 bg-stone-900/60 backdrop-blur-md z-[100] flex items-center justify-center p-5 animate-in fade-in duration-200">
        <div className="bg-white w-full max-w-md rounded-[2.5rem] shadow-2xl overflow-hidden animate-in slide-in-from-bottom duration-300">
@@ -118,11 +276,11 @@ const DoctorView: React.FC<{ activeTab: string, doctorType: DoctorType }> = ({ a
        <header className="p-6 pt-8 pb-4">
           <div className="flex justify-between items-center mb-6">
              <div>
-                <h1 className="text-2xl font-black text-stone-900 tracking-tight">早安，李医生</h1>
-                <p className="text-sm text-stone-500 font-bold mt-1">浦江社区卫生服务中心</p>
+                <h1 className="text-2xl font-black text-stone-900 tracking-tight">早安，{MOCK_COMMUNITY_DOCTOR.name}</h1>
+                <p className="text-sm text-stone-500 font-bold mt-1">{MOCK_COMMUNITY_DOCTOR.hospital}</p>
              </div>
              <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg shadow-orange-200 border border-orange-100 relative">
-                <span className="font-black text-orange-600 text-lg">李</span>
+                <span className="font-black text-orange-600 text-lg">{MOCK_COMMUNITY_DOCTOR.name[0]}</span>
                 <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></span>
              </div>
           </div>
@@ -159,7 +317,7 @@ const DoctorView: React.FC<{ activeTab: string, doctorType: DoctorType }> = ({ a
           <h2 className="text-sm font-bold text-stone-900 mb-3 px-1">快捷功能</h2>
           <div className="grid grid-cols-4 gap-3">
              {[
-                { label: '扫码执行', icon: <ScanLine size={20}/>, bg: 'bg-orange-100', text: 'text-orange-600', action: () => activeTab = 'SCANNER' },
+                { label: '扫码执行', icon: <ScanLine size={20}/>, bg: 'bg-orange-100', text: 'text-orange-600' },
                 { label: '一键续方', icon: <Pill size={20}/>, bg: 'bg-green-100', text: 'text-green-600' },
                 { label: '宣教推送', icon: <Send size={20}/>, bg: 'bg-blue-100', text: 'text-blue-600' },
                 { label: '查房模式', icon: <Clipboard size={20}/>, bg: 'bg-purple-100', text: 'text-purple-600' },
@@ -221,11 +379,11 @@ const DoctorView: React.FC<{ activeTab: string, doctorType: DoctorType }> = ({ a
              <div>
                 <h1 className="text-2xl font-black text-stone-900 tracking-tight">下午好</h1>
                 <p className="text-sm text-indigo-500 font-bold mt-1 flex items-center">
-                   <ShieldCheck size={14} className="mr-1"/> 瑞金医院 · 内分泌科
+                   <ShieldCheck size={14} className="mr-1"/> {MOCK_SPECIALIST_DOCTOR.hospital}
                 </p>
              </div>
              <div className="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 font-black text-lg border-2 border-white shadow-sm">
-                刘
+                {MOCK_SPECIALIST_DOCTOR.name[0]}
              </div>
            </div>
            {/* Stats */}
@@ -422,6 +580,11 @@ const DoctorView: React.FC<{ activeTab: string, doctorType: DoctorType }> = ({ a
     );
   };
 
+  // --- Router for Doctor Profile Tab ---
+  if (activeTab === Tab.DOCTOR_PROFILE) {
+      return <DoctorProfile />;
+  }
+
   // Specialist Routing
   if (doctorType === 'SPECIALIST') {
       if (consultPatient) return <SpecialistConsultationView />;
@@ -435,16 +598,16 @@ const DoctorView: React.FC<{ activeTab: string, doctorType: DoctorType }> = ({ a
               <div className="flex-1 flex flex-col items-center justify-center p-6 space-y-8 relative overflow-hidden">
                   <div className="absolute inset-0 opacity-20 bg-gradient-to-b from-orange-500 to-purple-900"></div>
                   {/* Scanner Visual */}
-                  <div className="w-72 h-72 border-2 border-orange-500 rounded-[2rem] relative flex items-center justify-center z-10 box-border overflow-hidden bg-black/30 backdrop-blur-sm">
-                     <div className="absolute inset-0 bg-gradient-to-b from-transparent via-orange-500/20 to-transparent w-full h-full animate-[spin_4s_linear_infinite]"></div>
-                     <ScanLine size={64} className="text-orange-500 opacity-50" />
-                     <div className="w-full h-0.5 bg-orange-500 shadow-[0_0_20px_#f97316] absolute top-1/2 animate-[ping_2s_infinite]"></div>
+                  <div className="w-72 h-72 border-2 border-[#bef264] rounded-[2rem] relative flex items-center justify-center z-10 box-border overflow-hidden bg-black/30 backdrop-blur-sm shadow-[0_0_30px_rgba(190,242,100,0.2)]">
+                     <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#bef264]/20 to-transparent w-full h-full animate-[spin_4s_linear_infinite]"></div>
+                     <ScanLine size={64} className="text-[#bef264] opacity-50" />
+                     <div className="w-full h-0.5 bg-[#bef264] shadow-[0_0_20px_#bef264] absolute top-1/2 animate-[ping_2s_infinite]"></div>
                   </div>
                   <div className="z-10 text-center">
                      <p className="text-white font-bold text-lg mb-2">核验就诊码</p>
                      <p className="text-stone-400 text-sm">请患者出示就诊凭证二维码</p>
                   </div>
-                  <button onClick={() => setScanState('SCANNING')} className="z-10 bg-orange-500 text-white px-8 py-4 rounded-full font-bold text-lg shadow-lg hover:scale-105 transition-transform">点击模拟扫码</button>
+                  <button onClick={() => setScanState('SCANNING')} className="z-10 bg-[#bef264] text-stone-900 px-8 py-4 rounded-full font-bold text-lg shadow-lg hover:scale-105 transition-transform">点击模拟扫码</button>
               </div>
           </div>
       );
@@ -452,22 +615,22 @@ const DoctorView: React.FC<{ activeTab: string, doctorType: DoctorType }> = ({ a
           <div className="h-full bg-stone-900 flex flex-col items-center justify-center text-center space-y-8">
              <div className="graphic-loader w-32 h-32">
                 <div className="graphic-loader-content">
-                   <ScanLine size={40} className="text-orange-500" />
+                   <ScanLine size={40} className="text-[#bef264]" />
                 </div>
              </div>
-             <div className="text-orange-500 font-bold text-xl">正在读取数据...</div>
+             <div className="text-[#bef264] font-bold text-xl">正在读取数据...</div>
              {setTimeout(() => setScanState('DETECTED'), 2000) && null} 
           </div>
       );
       if (scanState === 'DETECTED') return (
          <div className="flex flex-col h-full bg-white">
-            <div className="bg-orange-500 text-white p-6 rounded-b-[2.5rem] shadow-xl relative z-10">
+            <div className="bg-stone-900 text-white p-6 rounded-b-[2.5rem] shadow-xl relative z-10">
                 <button onClick={() => setScanState('IDLE')} className="absolute top-6 left-4 p-2 bg-white/10 rounded-full"><ChevronLeft size={20}/></button>
                 <div className="flex items-center space-x-4 mt-8">
-                   <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center text-orange-600 font-black text-2xl">{MOCK_USER.name[0]}</div>
+                   <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center text-stone-900 font-black text-2xl">{MOCK_USER.name[0]}</div>
                    <div>
                       <h2 className="text-2xl font-black">{MOCK_USER.name}</h2>
-                      <p className="text-orange-100 text-sm font-bold">待执行: 甲钴胺注射液</p>
+                      <p className="text-stone-400 text-sm font-bold">待执行: 甲钴胺注射液</p>
                    </div>
                 </div>
             </div>

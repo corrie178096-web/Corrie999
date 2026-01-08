@@ -18,7 +18,7 @@ const FamilyView: React.FC<{ activeTab: string }> = ({ activeTab }) => {
          <header className="flex justify-between items-center">
             <div>
                <h1 className="text-2xl font-black text-stone-900">家属关怀模式</h1>
-               <p className="text-sm text-stone-500 font-bold mt-1">当前关注: {mom.name} (母亲)</p>
+               <p className="text-sm text-stone-600 font-bold mt-1">当前关注: {mom.name} (母亲)</p>
             </div>
             <div className="w-10 h-10 bg-[#bef264] rounded-full flex items-center justify-center text-stone-900 font-bold border-2 border-white shadow-sm">
                {MOCK_FAMILY_USER.avatar}
@@ -26,7 +26,7 @@ const FamilyView: React.FC<{ activeTab: string }> = ({ activeTab }) => {
          </header>
 
          {/* Mom's Status Card */}
-         <div className="bg-stone-900 rounded-[2.5rem] p-6 text-white relative overflow-hidden shadow-xl shadow-stone-300">
+         <div className="bg-stone-900 rounded-[2.5rem] p-6 text-white relative overflow-hidden shadow-xl shadow-stone-900/30">
              <div className="absolute right-0 top-0 w-40 h-40 bg-[#bef264] rounded-full blur-[50px] opacity-10"></div>
              
              <div className="flex items-center space-x-4 mb-6 relative z-10">
@@ -102,7 +102,7 @@ const FamilyView: React.FC<{ activeTab: string }> = ({ activeTab }) => {
          <div>
             <div className="flex justify-between items-end mb-3 px-1">
                 <h3 className="font-bold text-lg text-stone-900">最近动态</h3>
-                <span className="text-xs font-bold text-stone-400">更多 <ChevronRight size={10} className="inline"/></span>
+                <span className="text-xs font-bold text-stone-500">更多 <ChevronRight size={10} className="inline"/></span>
             </div>
             
             <div className="bg-white p-5 rounded-[2rem] shadow-sm border border-stone-100 space-y-6">

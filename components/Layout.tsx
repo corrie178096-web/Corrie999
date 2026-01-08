@@ -33,12 +33,12 @@ const Layout: React.FC<LayoutProps> = ({ children, activeTab, onTabChange, role,
         };
       }
     }
-    // Patient / Family (Default Black/Lime)
+    // Patient / Family (Stone/Black Theme)
     return {
       bg: 'bg-stone-900',
       textActive: 'text-[#bef264]',
-      textInactive: 'text-stone-400',
-      shadow: 'shadow-stone-900/30'
+      textInactive: 'text-stone-500',
+      shadow: 'shadow-2xl shadow-stone-900/40'
     };
   };
 
@@ -149,15 +149,15 @@ const Layout: React.FC<LayoutProps> = ({ children, activeTab, onTabChange, role,
 
   return (
     <div className={`flex flex-col h-full font-sans ${role === 'PATIENT' || role === 'FAMILY' ? 'bg-[#F2F5E8]' : 'bg-gray-50'}`}>
-      {/* Main Content Area */}
-      <main className="flex-1 overflow-y-auto pb-28 no-scrollbar pt-8 md:pt-12">
+      {/* Main Content Area - Reduced Padding Top to accommodate Hero */}
+      <main className="flex-1 overflow-y-auto pb-28 no-scrollbar pt-0">
         {children}
       </main>
 
       {/* Bottom Navigation */}
-      <nav className={`absolute bottom-6 left-4 right-4 ${theme.bg} rounded-[2.5rem] shadow-2xl ${theme.shadow} z-50 transition-colors duration-500`}>
+      <nav className={`absolute bottom-6 left-6 right-6 ${theme.bg} rounded-full shadow-2xl ${theme.shadow} z-50 transition-colors duration-500 h-20`}>
         
-        {/* Central Floating Button for Patient */}
+        {/* Central Floating Button for Patient - Black Button Style */}
         {role === 'PATIENT' && (
            <button 
              onClick={() => onTabChange(Tab.PASS)}
@@ -168,27 +168,7 @@ const Layout: React.FC<LayoutProps> = ({ children, activeTab, onTabChange, role,
            </button>
         )}
 
-        {/* Central Floating Action for Specialist (MDT) */}
-        {role === 'DOCTOR' && doctorType === 'SPECIALIST' && (
-           <button 
-             className={`absolute left-1/2 transform -translate-x-1/2 -top-6 w-16 h-16 rounded-full flex items-center justify-center border-4 border-gray-50 shadow-lg bg-yellow-400 text-indigo-900`}
-           >
-             <MessageSquare size={28} strokeWidth={2.5} fill="currentColor" className="text-indigo-900/20" />
-             <MessageSquare size={28} strokeWidth={2.5} className="absolute" />
-           </button>
-        )}
-
-        {/* Central Floating Action for Community (Scanner) */}
-        {role === 'DOCTOR' && doctorType === 'COMMUNITY' && (
-           <button 
-             onClick={() => onTabChange(Tab.SCANNER)}
-             className={`absolute left-1/2 transform -translate-x-1/2 -top-6 w-16 h-16 rounded-full flex items-center justify-center border-4 border-orange-50 shadow-lg bg-white text-orange-500 active:scale-95 transition-transform`}
-           >
-             <ScanLine size={30} strokeWidth={2.5} />
-           </button>
-        )}
-
-        <div className="flex justify-around items-center h-20 px-2">
+        <div className="flex justify-around items-center h-full px-4">
           {renderNavItems()}
         </div>
       </nav>
@@ -214,7 +194,7 @@ const NavItem: React.FC<NavItemProps> = ({ icon, label, isActive, onClick, theme
       <div className={`transition-transform duration-300 ${isActive ? '-translate-y-1' : ''}`}>
         {icon}
       </div>
-      <span className={`text-[10px] font-bold tracking-wide ${isActive ? 'opacity-100' : 'opacity-0 scale-0'} transition-all duration-300 absolute bottom-3`}>{label}</span>
+      <span className={`text-[9px] font-black uppercase tracking-widest ${isActive ? 'opacity-100' : 'opacity-0 scale-0'} transition-all duration-300 absolute bottom-3`}>{label}</span>
     </button>
   );
 };
