@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { MapPin, Search, Pill, Activity, CalendarPlus, Share2, FileText, ArrowRight, Bot, Syringe, MessageSquare } from 'lucide-react';
 import { MOCK_USER, MOCK_ARTICLES } from '../constants';
 import { Tab, JourneyStep } from '../types';
+import Logo from './Branding';
 
 interface HomeViewProps {
   onChangeTab: (tab: Tab) => void;
@@ -42,13 +43,19 @@ const HomeView: React.FC<HomeViewProps> = ({ onChangeTab, journeyStep, setJourne
       
       {/* 1. Hero Section (参照图片：带插图、位置和问候语) */}
       <section className="bg-[#bef264] pt-12 px-6 pb-4 rounded-b-[4rem] relative overflow-hidden">
+        {/* Logo 背景点缀 */}
+        <div className="absolute top-6 left-6 opacity-10 rotate-12">
+            <Logo size={120} />
+        </div>
+        
         {/* 背景微调：为了让白色医生更突出，加一个浅色圆圈 */}
         <div className="absolute top-10 right-10 w-40 h-40 bg-white/20 rounded-full blur-3xl"></div>
         
         <div className="flex justify-between items-end relative z-10">
           <div className="pb-10 space-y-6">
              {/* 问候气泡 */}
-             <div className="bg-white px-5 py-2.5 rounded-full rounded-bl-none shadow-xl shadow-stone-900/5 inline-block animate-in slide-in-from-left duration-700">
+             <div className="bg-white px-5 py-2.5 rounded-full rounded-bl-none shadow-xl shadow-stone-900/5 inline-flex items-center space-x-2 animate-in slide-in-from-left duration-700">
+                <Logo size={18} />
                 <span className="text-stone-900 font-black text-xs uppercase tracking-tighter">早上好，陈奶奶!</span>
              </div>
              

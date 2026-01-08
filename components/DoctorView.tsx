@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { CheckCircle, Syringe, User, AlertCircle, Calendar, FileText, ChevronLeft, ShieldCheck, Activity, Clock, Inbox, FileInput, ArrowRight, X, UserCheck, Phone, Clipboard, Pill, Stethoscope, FilePlus, Send, Database, Brain, Zap, Users, GraduationCap, Radio, Search, Bell, AlertTriangle, ScanLine, ChevronRight, BarChart2, Microscope, Image as ImageIcon, MessageSquare, TrendingUp, Building2, Star, Award, Settings, LogOut, Verified, Briefcase, Share2, Users2, Target } from 'lucide-react';
 import { MOCK_USER, MOCK_RECORDS, MOCK_WAITING_QUEUE, MOCK_SPECIALIST_REFERRALS, MOCK_COMMUNITY_DOCTOR, MOCK_SPECIALIST_DOCTOR } from '../constants';
 import { QueuePatient, DoctorType, Tab } from '../types';
+import Logo from './Branding';
 
 const DoctorView: React.FC<{ activeTab: string, doctorType: DoctorType }> = ({ activeTab, doctorType }) => {
   // --- Community States ---
@@ -30,8 +31,8 @@ const DoctorView: React.FC<{ activeTab: string, doctorType: DoctorType }> = ({ a
             <div className="absolute bottom-0 left-0 w-48 h-48 bg-black/10 rounded-full blur-[60px] -ml-24 -mb-24"></div>
             
             <div className="flex items-center space-x-6 relative z-10 max-w-md mx-auto">
-               <div className="w-24 h-24 rounded-[2.5rem] bg-white text-stone-900 flex items-center justify-center text-4xl font-black shadow-2xl transform -rotate-3 ring-4 ring-white/20">
-                  {data.name[0]}
+               <div className="w-24 h-24 rounded-[2.5rem] bg-white text-stone-900 flex items-center justify-center text-4xl font-black shadow-2xl transform -rotate-3 ring-4 ring-white/20 overflow-hidden">
+                  <Logo size={50} />
                </div>
                <div className="space-y-1">
                   <div className="flex items-center space-x-2">
@@ -56,7 +57,6 @@ const DoctorView: React.FC<{ activeTab: string, doctorType: DoctorType }> = ({ a
                   </p>
                   <div className="flex items-baseline space-x-1">
                     <span className={`text-3xl font-black text-stone-900`}>
-                       {/* Fix: Directly accessing mock objects to resolve property access issues on union type */}
                        {isCommunity ? MOCK_COMMUNITY_DOCTOR.stats.totalPatients : MOCK_SPECIALIST_DOCTOR.stats.totalConsults}
                     </span>
                     <span className="text-[10px] font-black text-stone-400">位</span>
@@ -68,7 +68,6 @@ const DoctorView: React.FC<{ activeTab: string, doctorType: DoctorType }> = ({ a
                   </p>
                   <div className="flex items-baseline space-x-1">
                     <span className={`text-3xl font-black ${accentColor}`}>
-                       {/* Fix: Directly accessing mock objects to resolve property access issues on union type */}
                        {isCommunity ? MOCK_COMMUNITY_DOCTOR.stats.referralRate : MOCK_SPECIALIST_DOCTOR.stats.successRate}
                     </span>
                   </div>
@@ -80,7 +79,6 @@ const DoctorView: React.FC<{ activeTab: string, doctorType: DoctorType }> = ({ a
                   </p>
                   <div className="flex items-baseline space-x-1">
                     <span className="text-2xl font-black text-stone-900">
-                       {/* Fix: Directly accessing mock objects to resolve property access issues on union type */}
                        {isCommunity ? MOCK_COMMUNITY_DOCTOR.stats.mdtJoined : MOCK_SPECIALIST_DOCTOR.stats.studentCount}
                     </span>
                     <span className="text-[10px] font-black text-stone-400">
@@ -279,8 +277,8 @@ const DoctorView: React.FC<{ activeTab: string, doctorType: DoctorType }> = ({ a
                 <h1 className="text-2xl font-black text-stone-900 tracking-tight">早安，{MOCK_COMMUNITY_DOCTOR.name}</h1>
                 <p className="text-sm text-stone-500 font-bold mt-1">{MOCK_COMMUNITY_DOCTOR.hospital}</p>
              </div>
-             <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg shadow-orange-200 border border-orange-100 relative">
-                <span className="font-black text-orange-600 text-lg">{MOCK_COMMUNITY_DOCTOR.name[0]}</span>
+             <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg shadow-orange-200 border border-orange-100 relative overflow-hidden">
+                <Logo size={28} />
                 <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></span>
              </div>
           </div>
@@ -382,8 +380,8 @@ const DoctorView: React.FC<{ activeTab: string, doctorType: DoctorType }> = ({ a
                    <ShieldCheck size={14} className="mr-1"/> {MOCK_SPECIALIST_DOCTOR.hospital}
                 </p>
              </div>
-             <div className="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 font-black text-lg border-2 border-white shadow-sm">
-                {MOCK_SPECIALIST_DOCTOR.name[0]}
+             <div className="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center border-2 border-white shadow-sm overflow-hidden">
+                <Logo size={28} />
              </div>
            </div>
            {/* Stats */}
@@ -600,7 +598,7 @@ const DoctorView: React.FC<{ activeTab: string, doctorType: DoctorType }> = ({ a
                   {/* Scanner Visual */}
                   <div className="w-72 h-72 border-2 border-[#bef264] rounded-[2rem] relative flex items-center justify-center z-10 box-border overflow-hidden bg-black/30 backdrop-blur-sm shadow-[0_0_30px_rgba(190,242,100,0.2)]">
                      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#bef264]/20 to-transparent w-full h-full animate-[spin_4s_linear_infinite]"></div>
-                     <ScanLine size={64} className="text-[#bef264] opacity-50" />
+                     <Logo size={80} className="opacity-80" />
                      <div className="w-full h-0.5 bg-[#bef264] shadow-[0_0_20px_#bef264] absolute top-1/2 animate-[ping_2s_infinite]"></div>
                   </div>
                   <div className="z-10 text-center">
@@ -615,7 +613,7 @@ const DoctorView: React.FC<{ activeTab: string, doctorType: DoctorType }> = ({ a
           <div className="h-full bg-stone-900 flex flex-col items-center justify-center text-center space-y-8">
              <div className="graphic-loader w-32 h-32">
                 <div className="graphic-loader-content">
-                   <ScanLine size={40} className="text-[#bef264]" />
+                   <Logo size={40} />
                 </div>
              </div>
              <div className="text-[#bef264] font-bold text-xl">正在读取数据...</div>
@@ -627,7 +625,9 @@ const DoctorView: React.FC<{ activeTab: string, doctorType: DoctorType }> = ({ a
             <div className="bg-stone-900 text-white p-6 rounded-b-[2.5rem] shadow-xl relative z-10">
                 <button onClick={() => setScanState('IDLE')} className="absolute top-6 left-4 p-2 bg-white/10 rounded-full"><ChevronLeft size={20}/></button>
                 <div className="flex items-center space-x-4 mt-8">
-                   <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center text-stone-900 font-black text-2xl">{MOCK_USER.name[0]}</div>
+                   <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center text-stone-900 font-black text-2xl">
+                      <Logo size={32} />
+                   </div>
                    <div>
                       <h2 className="text-2xl font-black">{MOCK_USER.name}</h2>
                       <p className="text-stone-400 text-sm font-bold">待执行: 甲钴胺注射液</p>

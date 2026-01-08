@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { ShieldCheck, MessageCircle, CreditCard, User, AlertTriangle, FileText, Eye, Stethoscope, Users, Lock, ChevronRight, Building2, Activity, ScanLine, Scan, Key, FileKey, Smartphone, ChevronDown, CheckCircle2 } from 'lucide-react';
 import { AuthMethod, LoginType, LoginStep, UserRole, DoctorType } from '../types';
+import Logo from './Branding';
 
 interface LoginViewProps {
   onLoginSuccess: (type: LoginType, method: AuthMethod, role: UserRole, isVisitor: boolean, doctorType?: DoctorType) => void;
@@ -75,16 +76,16 @@ const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#bef264] rounded-full blur-[80px] -ml-16 -mb-16 opacity-60"></div>
 
         <div className="flex-1 flex flex-col justify-center items-center p-8 z-10">
-          <div className="w-32 h-32 bg-stone-900 rounded-[2.5rem] flex items-center justify-center shadow-2xl shadow-lime-500/20 mb-8 rotate-6 animate-in zoom-in duration-700">
-            <ShieldCheck size={60} className="text-[#bef264]" />
+          <div className="bg-stone-900 p-8 rounded-[3rem] shadow-2xl shadow-lime-500/20 mb-8 rotate-6 animate-in zoom-in duration-700">
+            <Logo size={80} />
           </div>
           <h1 className="text-4xl font-black text-stone-900 mb-2 tracking-tight">邻医安</h1>
           <p className="text-stone-500 font-medium text-lg">分级诊疗 · 医患互联</p>
           
-          <div className="mt-12 bg-white/60 backdrop-blur-md p-6 rounded-3xl border border-white space-y-4 w-full max-w-xs shadow-sm">
-             <h3 className="font-bold text-stone-800">启动声明</h3>
-             <p className="text-sm text-stone-600 leading-relaxed">
-               欢迎使用邻医安。我们致力于打通三甲医院与社区医疗，为您提供便捷的转诊与续方服务。
+          <div className="mt-12 bg-white/60 backdrop-blur-md p-6 rounded-3xl border border-white space-y-4 w-full max-w-xs shadow-sm text-center">
+             <h3 className="font-bold text-stone-800">安心承诺</h3>
+             <p className="text-xs text-stone-600 leading-relaxed">
+               您的健康数据受多重加密保护，<br/>让三甲级的医疗关怀延伸至家门口。
              </p>
           </div>
         </div>
@@ -95,7 +96,7 @@ const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
             className="flex items-center justify-center space-x-3 mb-6 cursor-pointer"
           >
             <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors ${agreed ? 'bg-stone-900 border-stone-900' : 'border-stone-400'}`}>
-              {agreed && <Eye size={14} className="text-[#bef264]" />}
+              {agreed && <CheckCircle2 size={14} className="text-[#bef264]" />}
             </div>
             <span className="text-stone-600 font-bold text-sm">我已阅读并同意用户协议</span>
           </div>
@@ -106,7 +107,7 @@ const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
             className={`w-full py-5 rounded-[2rem] font-bold text-lg shadow-xl transition-all flex items-center justify-center space-x-2
               ${agreed ? 'bg-[#bef264] text-stone-900 hover:scale-[1.02] active:scale-95 cursor-pointer shadow-lime-400/30' : 'bg-stone-200 text-stone-400 cursor-not-allowed'}`}
           >
-            <span>开始使用</span>
+            <span>开启安心医疗</span>
             <ChevronRight size={20} />
           </button>
         </div>
@@ -129,7 +130,10 @@ const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
 
          {/* Portal Switcher */}
          <div className="pt-12 px-6 pb-4">
-            <h2 className="text-3xl font-black text-stone-900 mb-6">欢迎登录</h2>
+            <div className="flex items-center justify-between mb-6">
+                <h2 className="text-3xl font-black text-stone-900">欢迎登录</h2>
+                <Logo size={40} />
+            </div>
             <div className="flex bg-stone-200 p-1 rounded-2xl mb-4">
                <button 
                  onClick={() => setPortal('PUBLIC')}
@@ -173,18 +177,18 @@ const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
               <div className="space-y-3">
                  <button 
                    onClick={() => handlePublicLogin('MEDICARE', role)}
-                   className="w-full bg-[#bef264] py-5 rounded-[2rem] flex items-center justify-center space-x-3 hover:bg-[#b0e64c] transition-colors relative overflow-hidden"
+                   className="w-full bg-[#bef264] py-5 rounded-[2rem] flex items-center justify-center space-x-3 hover:bg-[#b0e64c] transition-colors relative overflow-hidden shadow-xl shadow-lime-900/10"
                  >
                    <CreditCard size={20} className="text-stone-900" />
                    <span className="text-lg font-bold text-stone-900">医保电子凭证登录</span>
                  </button>
 
                  <div className="grid grid-cols-2 gap-3">
-                   <button onClick={() => handlePublicLogin('WECHAT', role)} className="bg-white py-4 rounded-[2rem] font-bold text-stone-700 flex items-center justify-center space-x-2">
+                   <button onClick={() => handlePublicLogin('WECHAT', role)} className="bg-white py-4 rounded-[2rem] font-bold text-stone-700 flex items-center justify-center space-x-2 border border-stone-100">
                      <MessageCircle size={20} className="text-[#07C160]" />
                      <span>微信</span>
                    </button>
-                   <button onClick={() => handlePublicLogin('ALIPAY', role)} className="bg-white py-4 rounded-[2rem] font-bold text-stone-700 flex items-center justify-center space-x-2">
+                   <button onClick={() => handlePublicLogin('ALIPAY', role)} className="bg-white py-4 rounded-[2rem] font-bold text-stone-700 flex items-center justify-center space-x-2 border border-stone-100">
                      <span className="text-[#1677FF] font-black text-lg">支</span>
                      <span>支付宝</span>
                    </button>
@@ -198,7 +202,9 @@ const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
            <div className="flex-1 flex flex-col px-6 space-y-6 animate-in slide-in-from-right duration-300">
               <div className="bg-white p-6 rounded-[2.5rem] shadow-sm space-y-5">
                  <div className="flex items-center space-x-3 text-stone-900 mb-2">
-                    <Stethoscope size={28} className="text-[#bef264]" />
+                    <div className="bg-[#bef264] p-2 rounded-xl">
+                        <Logo size={24} />
+                    </div>
                     <h3 className="font-bold text-lg">专业身份验证</h3>
                  </div>
 
@@ -268,11 +274,7 @@ const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
          {/* Graphic Loader */}
          <div className="graphic-loader w-32 h-32">
              <div className="graphic-loader-content">
-                {portal === 'PUBLIC' ? (
-                   <Scan size={40} className="text-[#bef264] fill-stone-900" />
-                ) : (
-                   <ShieldCheck size={40} className="text-[#3b82f6] fill-blue-50" />
-                )}
+                <Logo size={40} />
              </div>
          </div>
          
